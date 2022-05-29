@@ -1,4 +1,2 @@
-import ddl from './components/ddl';
-import modal from './components/modal';
-
-export default [modal, ddl];
+export * from './components/ddl';
+export * from './components/modal';

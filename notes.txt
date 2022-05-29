@@ -5,5 +5,8 @@ cd C:\websitesWorking\ttw_components
 npm run build
 
 cd C:\websitesWorking\ttw_components
-npm run build
+git add -A && git commit -m "Setup Package"
+
+cd C:\websitesWorking\ttw_components
+git push
 
