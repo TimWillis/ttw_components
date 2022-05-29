@@ -5,7 +5,14 @@ cd C:\websitesWorking\ttw_components
 npm run build
 
 cd C:\websitesWorking\ttw_components
-git add -A && git commit -m "Setup Package"
+npm publish
+
+cd C:\websitesWorking\ttw_components
+npm version patch
+
+
+cd C:\websitesWorking\ttw_components
+git add -A && git commit -m "update"
 
 cd C:\websitesWorking\ttw_components
 git push
