@@ -1,6 +1,6 @@
 {
   "name": "ttw_components",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "\"# typescript web components\"",
   "main": "dist\\index.js",
   "types": "dist\\index.d.ts",
