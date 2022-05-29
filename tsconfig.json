@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "esnext",
+      "outDir": "./dist",
+    "declaration": true,
+      "moduleResolution": "node",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "lib": [ "esnext", "dom" ],
+      "sourceMap": true,
+      "baseUrl": ".",
+    },
+    "include": ["src"],
+    "exclude": ["node_modues", "**/__tests__/*", "**/bit/*"]
+  }

@@ -1,0 +1,35 @@
+{
+  "name": "ttw_components",
+  "version": "1.0.0",
+  "description": "\"# typescript web components\"",
+  "main": "dist\index.js",
+  "main": "dist\index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "no_lint": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+     "prepublishOnly": "npm test && npm run no_lint",
+     "preversion": "npm run no_lint",
+     "version": "npm run format && git add -A src",
+     "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimWillis/ttw_components.git"
+  },
+  "keywords": ["typescript", "web", "components"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TimWillis/ttw_components/issues"
+  },
+  "homepage": "https://github.com/TimWillis/ttw_components#readme",
+  "devDependencies": {
+    "prettier": "^2.6.2",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0"
+  }
+}
