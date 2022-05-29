@@ -1,6 +1,6 @@
 {
   "name": "ttw_components",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "\"# typescript web components\"",
   "main": "dist\\index.js",
   "types": "dist\\index.d.ts",
@@ -10,16 +10,20 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "prepare": "npm run build",
-     "prepublishOnly": "npm test && npm run no_lint",
-     "preversion": "npm run no_lint",
-     "version": "npm run format && git add -A src",
-     "postversion": "git push && git push --tags"
+    "prepublishOnly": "npm test && npm run no_lint",
+    "preversion": "npm run no_lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TimWillis/ttw_components.git"
   },
-  "keywords": ["typescript", "web", "components"],
+  "keywords": [
+    "typescript",
+    "web",
+    "components"
+  ],
   "author": "ttw",
   "license": "ISC",
   "bugs": {
