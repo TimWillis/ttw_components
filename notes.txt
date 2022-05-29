@@ -1,0 +1,9 @@
+
+https://itnext.io/step-by-step-building-and-publishing-an-npm-typescript-package-44fe7164964c
+
+cd C:\websitesWorking\ttw_components
+npm run build
+
+cd C:\websitesWorking\ttw_components
+npm run build
+
