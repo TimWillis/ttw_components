@@ -71,7 +71,7 @@ interface table_interface {
   //Array<row_interface>;
 }
 
-interface this_interface {
+export interface this_interface {
   data: table_interface;
   actions: any;
 }

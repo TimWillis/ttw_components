@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
       "target": "es6",
-      "module": "esnext",
+      "module": "ES6",
       "outDir": "./dist",
+      "esModuleInterop": true,
     "declaration": true,
-      "moduleResolution": "node",
       "removeComments": true,
       "preserveConstEnums": true,
       "lib": [ "esnext", "dom" ],

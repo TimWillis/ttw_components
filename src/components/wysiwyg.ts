@@ -1,8 +1,8 @@
 /*https://codepen.io/WebDEasy/pen/YoVmBx*/
 
-import dom_diffing from '../utilities/dom_diffing';
+import  dom_diffing  from '../utilities/dom_diffing';
 
-interface this_interface {
+export interface this_interface {
   callback?: (e: any, value: string) => void;
   id?: string;
   html: string;

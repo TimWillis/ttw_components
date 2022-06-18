@@ -1,5 +1,24 @@
 
+notes 5-29-22
+exporting 3 things so far, now I need to export the rest of them.
+What about when you import xyz from mod@xyz - how can I do this?
+
+
+
+note 5-30-22
+no need to push to github and npm, I can just do npm run build then do
+$ npm install --save ../ttw_components
+with the correct relative path from the referencing project
+
+
+
+
+
 https://itnext.io/step-by-step-building-and-publishing-an-npm-typescript-package-44fe7164964c
+
+https://medium.com/@arnaudrinquin/build-modular-application-with-npm-local-modules-dfc5ff047bcc
+
+
 
 cd C:\websitesWorking\ttw_components
 npm run build

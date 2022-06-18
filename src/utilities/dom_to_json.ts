@@ -1,4 +1,4 @@
-export function toJson(node: Node & Record<string, unknown>) {
+function toJson(node: Node & Record<string, unknown>) {
   const propFix = { for: 'htmlFor', class: 'className' };
   const specialGetters = {
     style: (node: HTMLElement) => node.style.cssText,
@@ -68,7 +68,7 @@ export function toJson(node: Node & Record<string, unknown>) {
   return obj;
 }
 
-export function toDom(input: Node) {
+function toDom(input: Node) {
   const obj = typeof input === 'string' ? JSON.parse(input) : input;
   const propFix = { for: 'htmlFor', class: 'className' };
   let node: Node;
@@ -111,3 +111,5 @@ export function toDom(input: Node) {
   }
   return node;
 }
+
+export default { toDom, toJson };

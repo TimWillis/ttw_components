@@ -1,6 +1,6 @@
-import dom_diffing from '../utilities/dom_diffing';
+import  dom_diffing  from '../utilities/dom_diffing';
 
-interface list_gen_interface {
+export interface list_gen_interface {
   list: Array<any>;
   callback?: (e: any, id: string, list) => void;
   id?: string;

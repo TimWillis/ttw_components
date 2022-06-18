@@ -1,4 +1,4 @@
-import dom_diffing from '../../../utilities/dom_diffing';
+import  dom_diffing  from '../../../utilities/dom_diffing';
 
 declare global {
   var components: any;
