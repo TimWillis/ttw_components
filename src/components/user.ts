@@ -1,11 +1,11 @@
 export default (user) => {
-    const get_initials = (name) => {
-        return name
-            .split(" ")
-            .map((n) => n[0])
-            .join(" ");
-    };
-    const html = /*html*/ `
+  const get_initials = (name) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join(' ');
+  };
+  const html = /*html*/ `
         <style>
         li{                        
             height: 20px;
@@ -51,20 +51,18 @@ export default (user) => {
     
     `;
 
-    setTimeout(() => {
-        document.getElementById("user").addEventListener("click", (e) => {
-            /*show signout and other options, like a dropdown list*/
-            const class_list = document.getElementById("user_dd").classList;
-            class_list.contains("hidden")
-                ? class_list.remove("hidden")
-                : class_list.add("hidden");
-        });
-        document.getElementById("signout").addEventListener("click", (e) => {
-            /*show signout and other options, like a dropdown list*/
-            sessionStorage.setItem("user", "");
-            location.reload();
-        });
-    }, 0);
+  setTimeout(() => {
+    document.getElementById('user').addEventListener('click', (e) => {
+      /*show signout and other options, like a dropdown list*/
+      const class_list = document.getElementById('user_dd').classList;
+      class_list.contains('hidden') ? class_list.remove('hidden') : class_list.add('hidden');
+    });
+    document.getElementById('signout').addEventListener('click', (e) => {
+      /*show signout and other options, like a dropdown list*/
+      sessionStorage.setItem('user', '');
+      location.reload();
+    });
+  }, 0);
 
-    return html;
+  return html;
 };

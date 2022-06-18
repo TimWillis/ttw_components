@@ -6,4 +6,4 @@ async function sleep(fn, ...args) {
   return fn(...args);
 }
 
-export default {timeout, sleep}
+export default { timeout, sleep };

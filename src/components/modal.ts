@@ -1,4 +1,4 @@
-import  dom_diffing  from '../utilities/dom_diffing';
+import dom_diffing from '../utilities/dom_diffing';
 
 export interface this_interface {
   callback?: (e: any, value: string) => void;
