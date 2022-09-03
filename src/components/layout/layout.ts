@@ -6,20 +6,6 @@ declare global {
   var components: any;
   var is_node: any;
 }
-const css = () => {
-  return `
-    <style>
-        #page_layout{
-            width: 100%;
-        }
-        #footer{
-            min-height: 30px;
-        }
-        #content{
-            margin-top: 70px;
-        }
-    </style>`;
-};
 
 const layout = (
   page: string,
@@ -30,6 +16,20 @@ const layout = (
   facebook_url = '',
   logo_url = '',
 ) => {
+  const css = () => {
+    return `
+      <style>
+          #page_layout{
+              width: 100%;
+          }
+          #footer{
+              min-height: 30px;
+          }
+          #content{
+              margin-top: 70px;
+          }
+      </style>`;
+  };
   // debugger;
   const init = () => {};
 

@@ -1,4 +1,5 @@
 function toJson(node: Node & Record<string, unknown>) {
+  console.log('dom to json');
   const propFix = { for: 'htmlFor', class: 'className' };
   const specialGetters = {
     style: (node: HTMLElement) => node.style.cssText,

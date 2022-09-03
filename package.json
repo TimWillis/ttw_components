@@ -2,12 +2,17 @@
   "name": "ttw_components",
   "version": "1.0.7",
   "description": "\"# typescript web components\"",
-  "main": "dist\\index.js",
+  "main": "dist\\cjs\\index.js",
+  "module": "dist\\index.js",
   "types": "dist\\index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "no_lint": "echo \"Error: no test specified\"",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig_cjs.json",
+    "dev": "concurrently --kill-others \"tsc -p tsconfig.json -w\" \"tsc -p tsconfig_cjs.json -w\"",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run no_lint",
@@ -32,5 +37,8 @@
   "homepage": "https://github.com/TimWillis/ttw_components#readme",
   "devDependencies": {
     "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "diff-dom": "^4.2.3"
   }
 }

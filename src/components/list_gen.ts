@@ -1,4 +1,5 @@
-import dom_diffing from '../utilities/dom_diffing';
+// import { dom_diffing } from './../bit/index';
+// import dom_diffing from '../utilities/dom_diffing';
 
 export interface list_gen_interface {
   list: Array<any>;
@@ -6,7 +7,13 @@ export interface list_gen_interface {
   id?: string;
 }
 
-export default ({ list = [], callback, id = 'list_gen' + Date.now() }: list_gen_interface) => {
+export default (dom_diffing, { list = [], callback, id = 'list_gen' + Date.now() }: list_gen_interface) => {
+  // const dom_diffing_mod = await import('../utilities/dom_diffing');
+  // const dom_diffing = dom_diffing_mod.default;
+  // .then((res) => {
+  //   dom_diffing = res.default;
+  // });
+
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
   const css = /*css*/ `<style>

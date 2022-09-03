@@ -35,16 +35,34 @@ export default (root_path = '') => {
     });
   };
 
-  const get = async (path: string, from_last_update = Date.now() - one_day, idb_only = true) => {
+  const update_data = async (path: string) => {
+    const new_data = await get_rest(path);
+    if (new_data) {
+      set_idb(path, new_data);
+    }
+  };
+
+  const get = async (path: string, from_last_update = Date.now() - one_day, type = 'both') => {
     let data = await get_idb(path);
-    if ((!data || data.last_fetch < from_last_update) && !idb_only) {
+    if (!data && type !== 'idb') {
       data = await get_rest(path);
       set_idb(path, data);
-    } else if (!idb_only) {
-      get_rest(path).then((new_data) => {
-        set_idb(path, new_data);
-      });
+    } else if (type === 'rest') {
+      const new_data = await get_rest(path);
+      data = new_data || data;
+      set_idb(path, data);
+    } else if (type !== 'idb') {
+      update_data(path);
     }
+    // if ((!data || data.last_fetch < from_last_update) && !idb_only) {
+    //   const new_data = await get_rest(path);
+    //   data = new_data || data;
+    //   set_idb(path, data);
+    // } else if (!idb_only) {
+    //   get_rest(path).then((new_data) => {
+    //     set_idb(path, new_data);
+    //   });
+    // }
     return (data && data.data) || data;
   };
 

@@ -6,10 +6,11 @@ import dom_diffing from '../utilities/dom_diffing';
 
 export interface this_interface {
   list: Array<any>;
-  callback?: (e: any, create_data_list) => void;
+  callback?: (e: any, create_data_list, data?: boolean) => void;
   id?: string;
   value?: string;
   placeholder?: string;
+  select_only?: boolean;
 }
 
 export default ({
@@ -18,57 +19,79 @@ export default ({
   callback,
   id = 'list_' + Date.now(),
   placeholder = 'Select Value',
+  select_only = false,
 }: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
   // list = list.map((item) => {
   //   return { value: item.value ? item.value : item, name: item.name ? item.name : item };
   // });
-  list = list.map((item) => {
-    return item.name ? item.name : item;
-  });
+
   const css = /*css*/ `<style>
         #${id}_container{
             background-color: var(--theme-prim-forcolor);
+        }        
+        #${id}_items{
+          background-color: lightgrey;
+        }
+        .autocomplete_item:hover{
+            background-color: lightgrey;
+            cursor: pointer;
         }
     </style>`;
+  let current_list = list;
   const create_data_list = (list) => {
+    list = list.map((item) => {
+      return { name: item.name !== undefined ? item.name : item, value: item.value !== undefined ? item.value : item };
+    });
+    current_list = list;
     dom_diffing(
       id + '_items',
       list
         ? list
             .map((sib) => {
-              return `
-    <option value="${sib}">${sib}</option>
-`;
+              return `<div data-value="${sib.value}" style='height: 1.5em;' class='autocomplete_item'>${sib.name}</div>`;
             })
             .join('')
         : '',
-      'datalist',
+      'div',
     );
-    //     document.getElementById(id + "_items").innerHTML = list
-    //         ? list
-    //               .map((sib) => {
-    //                   return `
-    //     <option value="${sib}">${sib}</option>
-    // `;
-    //               })
-    //               .join("")
-    //         : "";
+    const item_el = document.getElementById(id + '_items');
+    item_el.addEventListener('click', (e: MouseEvent) => {
+      const input_el = document.getElementById(id) as HTMLInputElement | null;
+      input_el.value = (e.target as HTMLElement).dataset.value;
+      callback(e, create_data_list, true);
+    });
   };
   setTimeout(() => {
-    document.getElementById(id).addEventListener('keyup', (e) => {
+    const input_el = document.getElementById(id) as HTMLInputElement | null;
+    input_el.addEventListener('keyup', (e) => {
       callback(e, create_data_list);
     });
-    create_data_list(list);
+    //create_data_list(list);
+    input_el.addEventListener('focus', (e) => {
+      callback(e, create_data_list);
+    });
+    input_el.addEventListener('blur', (e) => {
+      setTimeout(() => {
+        if (select_only) {
+          input_el.value = current_list.find((item) => item.value === input_el.value) ? input_el.value : '';
+        }
+        create_data_list([]);
+      }, 300);
+    });
   }, 0);
   return /*html*/ `
     ${css}
     <div class='layout vertical' id='${id}_container'> 
-        <div class='list_container layout horizontal wrap'>
-            <input list="${id}_items" value="${value}" placeholder="${placeholder}" id="${id}" style="width: 100%;" autocomplete="off"/>
-            <datalist id="${id}_items">
-            </datalist>
+        <div class='list_container layout vertical'>
+          <input list="${id}_items" value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
+            <div   style="overflow-y: visible; height: 0;">
+              <div id="${id}_items"  
+                style="overflow-y: auto; max-height: 100px; height: auto; border: 1px solid lightgrey; 
+                position: relative; background-color: white;">
+              </div> 
+            </div> 
         </div>
     </div>
     
