@@ -60,17 +60,23 @@ export default ({
     item_el.addEventListener('click', (e: MouseEvent) => {
       const input_el = document.getElementById(id) as HTMLInputElement | null;
       input_el.value = (e.target as HTMLElement).dataset.value;
-      callback(e, create_data_list, true);
+      callback
+        ? callback(e, create_data_list, true)
+        : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
   };
   setTimeout(() => {
     const input_el = document.getElementById(id) as HTMLInputElement | null;
     input_el.addEventListener('keyup', (e) => {
-      callback(e, create_data_list);
+      callback
+        ? callback(e, create_data_list, true)
+        : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
     //create_data_list(list);
     input_el.addEventListener('focus', (e) => {
-      callback(e, create_data_list);
+      callback
+        ? callback(e, create_data_list, true)
+        : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
     input_el.addEventListener('blur', (e) => {
       setTimeout(() => {

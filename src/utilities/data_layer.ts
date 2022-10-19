@@ -1,20 +1,42 @@
 import * as idb_keyvalue from './idb_keyvalue';
 
-export default (root_path = '') => {
+export default (root_path = '', token?, re_auth?) => {
   const one_day = 24 * 60 * 60 * 1000;
+  const headers = new Headers();
+  const bearer = 'Bearer ' + token;
+  headers.append('Authorization', bearer);
+  // headers.append(
+  //     "Cookie",
+  //     "ARRAffinity=da08aa2179b99a162682da0c3bcfede9eb48fb04b551c343ca0b60a0a5f219b3; ARRAffinitySameSite=da08aa2179b99a162682da0c3bcfede9eb48fb04b551c343ca0b60a0a5f219b3"
+  // );
+  // headers.append(
+  //     "Authorization",
+  //     "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJhcGk6Ly8yODI3NGIzNy0zNmIwLTRmNzUtYWNhNS03NmI0MDZkMmQzNDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC82MzZlNTcxZS0zNDcxLTQ1ZGMtYjI3Yi1hZmY5ODMzNGIzMzcvIiwiaWF0IjoxNjYzMTczNjUzLCJuYmYiOjE2NjMxNzM2NTMsImV4cCI6MTY2MzE3NzYzNCwiYWNyIjoiMSIsImFpbyI6IkUyWmdZUGcyOStXYjE0RkJWWVpPR1N4eUJ4S25zVEtiK0o3YU9GSEF5K2xDejYwbHNVRUEiLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiMjgyNzRiMzctMzZiMC00Zjc1LWFjYTUtNzZiNDA2ZDJkMzQwIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJXaWxsaXMiLCJnaXZlbl9uYW1lIjoiVGltb3RoeSIsImlwYWRkciI6IjEwNy4xNDUuMTIyLjY3IiwibmFtZSI6IlRpbW90aHkgXCJHYXRvclwiIFdpbGxpcyIsIm9pZCI6ImEwMjc5Mzk3LTEzODctNDIyNi04YjQzLWY1OGZmOWUyZDkzOCIsInJoIjoiMC5BUmNBSGxkdVkzRTAzRVd5ZTZfNWd6U3pOemRMSnlpd05uVlByS1YydEFiUzAwQVhBRDAuIiwic2NwIjoiYXBpLnNjb3BlIiwic3ViIjoiRkRCdzhPMTRfZWh1TWpFMXI5c0g0dkxuOTVyRHBOY3FUeHZJbU9ONkY4byIsInRpZCI6IjYzNmU1NzFlLTM0NzEtNDVkYy1iMjdiLWFmZjk4MzM0YjMzNyIsInVuaXF1ZV9uYW1lIjoidHdpbGxpc0BobGluYy5jb20iLCJ1cG4iOiJ0d2lsbGlzQGhsaW5jLmNvbSIsInV0aSI6InJyZG5Za240SGtldmxLYTB6Zk1lQUEiLCJ2ZXIiOiIxLjAifQ.mi93RxxrTOeBdczM28XcdyLto3z02-OR67t1lUm7CUxcrkAEaMYpCeJfZReNHsFU5I7a3rJ97fSlK61_OjZXKEN4AjVc4SB2KRiWzu9xg8TfbxgtIwFXgjxKzDtOvQa5FDbkrUKme_2gmAH_jj6KIepS8DftuQjGFBHOWfvyPWQlYI31N9whIammyQnUtqBF6bnE7MKUQpzH2iv74f7Gf_eNyYm0ohoQ9EPv_QTMxFXG0sFiwn7lgJiryOH_Ar4rivtoy981bStkeBnqtBavXSqjQdTAFBQpeNp2wUonTxEmwJw_qhKiwnoHm41N2i3HfWF9tXd1Cl0Zl9Z7kXAF9w"
+  // );
+
+  const requestOptions: any = {
+    headers: headers,
+    redirect: 'follow',
+  };
 
   const get_rest = (path: string) => {
-    return fetch(root_path + path, {
-      method: 'get',
-    })
+    return fetch(root_path + path, token ? Object.assign({}, requestOptions, { method: 'GET' }) : { method: 'GET' })
       .then((response) => {
-        debugger;
+        // debugger;
         let res;
-        try {
+
+        if (response.status == 200) {
           res = response.json();
-        } catch (e) {
-          res = response;
+        } else if (response.status === 401) {
+          re_auth();
+        } else {
+          throw response;
         }
+        // try {
+        //   res = response.json();
+        // } catch (e) {
+        //   res = response;
+        // }
         return res;
       })
       .then((data) => {
@@ -78,13 +100,32 @@ export default (root_path = '') => {
   };
 
   const post_rest = async (path: string, data: any) => {
-    return await await fetch(root_path + path, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: data,
-    }).catch(function (err) {
+    // const init_options = {
+    //   method: 'POST',
+    //   body: data,
+    // };
+    // const new_headers = new Headers();
+    // init_options.headers = new_headers
+    let options;
+    if (token) {
+      requestOptions.method = 'POST';
+      requestOptions.body = data;
+      requestOptions.headers.append('Content-Type', 'application/json');
+      options = Object.assign({}, requestOptions);
+    } else {
+      options = {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    }
+    // const options = token ? Object.assign({}, requestOptions, init_options) : init_options;
+
+    // headers.append('Content-Type', 'application/json');
+    //   options.headers.append('Content-Type', 'application/json');
+    return await fetch(root_path + path, options).catch(function (err) {
       console.log('Data not posted!', err, path);
     });
   };

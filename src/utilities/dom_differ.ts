@@ -1,9 +1,15 @@
 export default () => {
   function e(t, o, n) {
     var s;
+    // try{
+
+    // }catch(e){
+
+    // }
+
     return (
-      '#text' === t.nodeName
-        ? (s = n.document.createTextNode(t.data))
+      '#text' === t.nodeName || !isNaN(parseInt(t.nodeName))
+        ? (s = n.document.createTextNode(t.data || t.nodeName))
         : '#comment' === t.nodeName
         ? (s = n.document.createComment(t.data))
         : (o
@@ -652,7 +658,10 @@ export default () => {
                   !f ||
                   '<' === f ||
                   (o.childNodes || (o.childNodes = []),
-                  o.childNodes.push({ nodeName: '#text', data: w(e.slice(h, e.indexOf('<', h))) })),
+                  o.childNodes.push({
+                    nodeName: '#text',
+                    data: w(e.slice(h, e.slice(h).search(/(&nbsp;|<([^>]+)>)/gi) + h)),
+                  })),
                 0 === s && n.push(o),
                 (r = i[s - 1]) && (r.childNodes || (r.childNodes = []), r.childNodes.push(o)),
                 (i[s] = o)),

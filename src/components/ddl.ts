@@ -6,6 +6,7 @@ export interface ddl_interface {
   id?: string;
   selected_value?: string;
   is_disabled?: boolean;
+  shadow_root?: string;
 }
 
 export default ({
@@ -14,7 +15,14 @@ export default ({
   id = 'select' + Date.now(),
   selected_value,
   is_disabled = false,
+  shadow_root,
 }: ddl_interface) => {
+  const root = shadow_root ? document.getElementById(shadow_root)?.shadowRoot : document;
+  if (options.length > 0 && options[0].value === undefined) {
+    options = options.map((option) => {
+      return { value: option, name: option };
+    });
+  }
   // const shorten_string_mod = await import('../utilities/shorten_string');
   // const shorten_string = shorten_string_mod.default;
 
@@ -31,7 +39,7 @@ export default ({
     </style>`;
   if (callback) {
     setTimeout(() => {
-      document.getElementById(id).addEventListener('change', (e) => {
+      root.getElementById(id).addEventListener('change', (e) => {
         ////debugger;
         callback(e, options[e.target['selectedIndex']].value);
 

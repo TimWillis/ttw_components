@@ -24,7 +24,7 @@ import DiffDOM from './dom_differ';
 
 // declare const browser: any;
 
-export default (id, html, tag = 'div', el = null, use_dom_diff = false) => {
+export default (id, html, tag = 'div', el: Element | HTMLElement | null = null, use_dom_diff = false) => {
   // let DiffDOM: any = await import('./dom_differ');
   const diff = DiffDOM();
   // import { DiffDOM } from './diff-dom/dist/index.js';
