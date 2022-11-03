@@ -1,5 +1,7 @@
 import * as idb_keyvalue from './idb_keyvalue';
 
+export type get_type = "idb" | "post" | "rest" | "both";
+
 export default (root_path = '', token?, re_auth?) => {
   const one_day = 24 * 60 * 60 * 1000;
   const headers = new Headers();
@@ -64,13 +66,17 @@ export default (root_path = '', token?, re_auth?) => {
     }
   };
 
-  const get = async (path: string, from_last_update = Date.now() - one_day, type = 'both') => {
+  const get = async (path: string, from_last_update = Date.now() - one_day, type: get_type = 'both', post_data?) => {
     let data = await get_idb(path);
     if (!data && type !== 'idb') {
-      data = await get_rest(path);
+      data = type === 'post' ? await post_rest(path, post_data) : await get_rest(path);
       set_idb(path, data);
     } else if (type === 'rest') {
       const new_data = await get_rest(path);
+      data = new_data || data;
+      set_idb(path, data);
+    }  else if (type === 'post') {
+      const new_data = await post_rest(path, post_data);
       data = new_data || data;
       set_idb(path, data);
     } else if (type !== 'idb') {
@@ -108,10 +114,11 @@ export default (root_path = '', token?, re_auth?) => {
     // init_options.headers = new_headers
     let options;
     if (token) {
-      requestOptions.method = 'POST';
-      requestOptions.body = data;
-      requestOptions.headers.append('Content-Type', 'application/json');
-      options = Object.assign({}, requestOptions);
+      let new_request_options = Object.assign({}, requestOptions);
+      new_request_options.method = 'POST';
+      new_request_options.body = data;
+      new_request_options.headers.append('Content-Type', 'application/json');
+      options = Object.assign({}, new_request_options);
     } else {
       options = {
         method: 'POST',
@@ -125,9 +132,31 @@ export default (root_path = '', token?, re_auth?) => {
 
     // headers.append('Content-Type', 'application/json');
     //   options.headers.append('Content-Type', 'application/json');
-    return await fetch(root_path + path, options).catch(function (err) {
-      console.log('Data not posted!', err, path);
-    });
+    return await fetch(root_path + path, options)
+      .then((response) => {
+        // debugger;
+        let res;
+
+        if (response.status == 200) {
+          res = response.text();
+        } else if (response.status === 401) {
+          re_auth();
+        } else {
+          throw response;
+        }
+        // try {
+        //   res = response.json();
+        // } catch (e) {
+        //   res = response;
+        // }
+        return res;
+      })
+      .then((data) => {
+        return { data: data, last_fetch: Date.now() };
+      })
+      .catch(function (err) {
+        console.log('Data not posted!', err, path);
+      });
   };
   const post = async (path: string, data: any) => {
     const post_data = { data: data, last_fetch: Date.now() };
