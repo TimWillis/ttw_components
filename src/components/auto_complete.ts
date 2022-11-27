@@ -59,7 +59,8 @@ export default ({
     const item_el = document.getElementById(id + '_items');
     item_el.addEventListener('click', (e: MouseEvent) => {
       const input_el = document.getElementById(id) as HTMLInputElement | null;
-      input_el.value = (e.target as HTMLElement).dataset.value;
+      input_el.value = (e.target as HTMLElement).innerText;
+      // input_el.value = (e.target as HTMLElement).dataset.value;
       callback
         ? callback(e, create_data_list, true)
         : create_data_list(list.filter((item) => item.value.includes(input_el.value)));

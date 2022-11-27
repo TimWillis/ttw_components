@@ -11,11 +11,11 @@ export default (
 ) => {
   const create_list = (l) => {
     return l
-      .map((item: { value: string; id: any }) => {
+      .map((item) => {
         return `<div class='list_item layout horizontal type_${type} '>
         ${is_link ? `<a target="_blank" href="${item.value}">${item.value}</a>` : item.value}
         ${type === 'table' ? `<div class='flex'></div>` : ''}
-        ${callback ? `<div class='close' data-id="${item.id}">X</div>` : ''}
+        ${callback && item.deletable !== false ? `<div class='close' data-id="${item.id}">X</div>` : ''}
     </div>
 `;
       })
@@ -33,8 +33,8 @@ export default (
       }
     });
   };
-  if(callback){
-    setTimeout(init, 0);
+  if (callback) {
+    setTimeout(init, 100);
   }
   const css = /*css*/ `<style>
     
