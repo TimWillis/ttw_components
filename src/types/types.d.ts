@@ -4,7 +4,15 @@ declare module '*.json' {
   const value: any;
   export default value;
 }
-
+interface Window {
+  _ttw: any;
+}
+declare module '*.png' {
+  const value: any;
+  export default value;
+}
+declare module 'vanillajs-datepicker';
+declare module 'date_picker';
 /*only needed for root components so they can mount. may change this to ttw*/
 // declare global {
 //   var ttw: TTW;

@@ -11,7 +11,7 @@ export default (
 ) => {
   const create_list = (l) => {
     return l
-      .map((item) => {
+      ?.map((item) => {
         return `<div class='list_item layout horizontal type_${type} '>
         ${is_link ? `<a target="_blank" href="${item.value}">${item.value}</a>` : item.value}
         ${type === 'table' ? `<div class='flex'></div>` : ''}
@@ -96,7 +96,7 @@ export default (
 </style>`;
   return (
     css +
-    `<div id='${id}'   class='layout wrap type_${type}  ${grow_wider ? 'flex' : ''}'>
+    `<div id='${id}'   class='layout horizontal wrap type_${type}  ${grow_wider ? 'flex' : ''}'>
     ${create_list(list)}
     </div>`
   );

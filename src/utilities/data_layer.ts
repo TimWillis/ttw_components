@@ -1,6 +1,6 @@
 import * as idb_keyvalue from './idb_keyvalue';
 
-export type get_type = "idb" | "post" | "rest" | "both";
+export type get_type = 'idb' | 'post' | 'rest' | 'both';
 
 export default (root_path = '', token?, re_auth?) => {
   const one_day = 24 * 60 * 60 * 1000;
@@ -31,6 +31,7 @@ export default (root_path = '', token?, re_auth?) => {
           res = response.json();
         } else if (response.status === 401) {
           re_auth();
+          throw response;
         } else {
           throw response;
         }
@@ -46,6 +47,7 @@ export default (root_path = '', token?, re_auth?) => {
       })
       .catch(function (err) {
         console.log('Data not fetched!', err, path);
+        throw err;
       });
   };
 
@@ -60,7 +62,9 @@ export default (root_path = '', token?, re_auth?) => {
   };
 
   const update_data = async (path: string) => {
-    const new_data = await get_rest(path);
+    const new_data = await get_rest(path).catch((e) => {
+      throw e;
+  });;
     if (new_data) {
       set_idb(path, new_data);
     }
@@ -69,18 +73,31 @@ export default (root_path = '', token?, re_auth?) => {
   const get = async (path: string, from_last_update = Date.now() - one_day, type: get_type = 'both', post_data?) => {
     let data = await get_idb(path);
     if (!data && type !== 'idb') {
-      data = type === 'post' ? await post_rest(path, post_data) : await get_rest(path);
+      data =
+        type === 'post'
+          ? await post_rest(path, post_data).catch((e) => {
+              throw e;
+            })
+          : await get_rest(path).catch((e) => {
+              throw e;
+            });
       set_idb(path, data);
     } else if (type === 'rest') {
-      const new_data = await get_rest(path);
+      const new_data = await get_rest(path).catch((e) => {
+        throw e;
+      });
       data = new_data || data;
       set_idb(path, data);
-    }  else if (type === 'post') {
-      const new_data = await post_rest(path, post_data);
+    } else if (type === 'post') {
+      const new_data = await post_rest(path, post_data).catch((e) => {
+        throw e;
+      });
       data = new_data || data;
       set_idb(path, data);
     } else if (type !== 'idb') {
-      update_data(path);
+      update_data(path).catch((e) => {
+        console.error(e);
+      });
     }
     // if ((!data || data.last_fetch < from_last_update) && !idb_only) {
     //   const new_data = await get_rest(path);
@@ -102,6 +119,7 @@ export default (root_path = '', token?, re_auth?) => {
       })
       .catch(function (err) {
         console.log('Data not saved!', err, path);
+        throw err;
       });
   };
 
@@ -141,6 +159,7 @@ export default (root_path = '', token?, re_auth?) => {
           res = response.text();
         } else if (response.status === 401) {
           re_auth();
+          throw response;
         } else {
           throw response;
         }
@@ -156,6 +175,7 @@ export default (root_path = '', token?, re_auth?) => {
       })
       .catch(function (err) {
         console.log('Data not posted!', err, path);
+        throw err;
       });
   };
   const post = async (path: string, data: any) => {

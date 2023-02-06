@@ -50,7 +50,7 @@ export default ({
       list
         ? list
             .map((sib) => {
-              return `<div data-value="${sib.value}" style='height: 1.5em;' class='autocomplete_item'>${sib.name}</div>`;
+              return `<div data-value="${sib.value}" style='height: 1.5em; width: fit-content;' class='autocomplete_item'>${sib.name}</div>`;
             })
             .join('')
         : '',
@@ -92,11 +92,11 @@ export default ({
     ${css}
     <div class='layout vertical' id='${id}_container'> 
         <div class='list_container layout vertical'>
-          <input list="${id}_items" value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
-            <div   style="overflow-y: visible; height: 0;">
+          <input list="${id}" value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
+            <div   style="overflow: visible; height: 0;">
               <div id="${id}_items"  
-                style="overflow-y: auto; max-height: 100px; height: auto; border: 1px solid lightgrey; 
-                position: relative; background-color: white;">
+                style="overflow-y: auto; overflow-x: visible;width: fit-content;  max-height: 100px; height: auto; border: 1px solid lightgrey; 
+                position: relative; background-color: white; white-space: nowrap;">
               </div> 
             </div> 
         </div>

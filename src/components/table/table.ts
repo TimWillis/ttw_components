@@ -10,9 +10,9 @@
 const css = /*css*/ `
         <style>
             .table_headers .table_header, .table_row .table_column{
-                border-right: 2px solid white;
+                border-right: 2px solid var(--main-bg-color);
             }
-            .table_header:last-child, .table_column:last-child{
+            .table_header:last-child, .table_column:last-child, .table_row:nth-child(even) .table_column:last-child{
                 border-right: none;
             }
             .table_header, .table_column{
@@ -36,6 +36,7 @@ const css = /*css*/ `
             }
             .table_row:nth-child(even) .table_column {
                 background-color: var(--main-bg-color);
+                border-right: 2px solid white;
             }
             .table_rows{
                 border: 1px solid var(--canvas-prim-forcolor);

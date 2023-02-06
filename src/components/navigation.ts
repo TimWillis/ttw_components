@@ -1,4 +1,4 @@
-export default function (callback) {
+export default function (callback, base_route = '/popup/') {
   let last_route = '';
   const router = function (event?: any) {
     // const user_json = sessionStorage.getItem("user");
@@ -25,7 +25,7 @@ export default function (callback) {
       //         : route.includes("/")
       //         ? route
       //         : "/" + route;
-      let page = '/popup/' + route;
+      let page = base_route + route;
       const stateObj = { page: page };
       history.replaceState(stateObj, page, page);
       // const change_page = (current__page: any) =>{

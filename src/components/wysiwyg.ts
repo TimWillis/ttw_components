@@ -8,48 +8,62 @@ export interface this_interface {
   html: string;
   style?: string;
   is_disabled?: boolean;
+  base_url?: string;
 }
 
-export default ({ callback, id = 'wysiwyg' + Date.now(), is_disabled = false, html, style }: this_interface) => {
+export default ({
+  callback,
+  id = 'wysiwyg' + Date.now(),
+  is_disabled = false,
+  html,
+  style,
+  base_url = '/resources',
+}: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
 
   let editor, toolbar, buttons, contentArea, visuellView, htmlView, modal;
-  setTimeout(() => {
+  const init = () => {
     // define vars
     editor = document.querySelector(`#${id}_editor`);
-    toolbar = editor.getElementsByClassName('toolbar')[0];
-    buttons = toolbar.querySelectorAll('.btn:not(.has-submenu)');
-    contentArea = editor.getElementsByClassName('content-area')[0];
-    visuellView = contentArea.getElementsByClassName('visuell-view')[0];
-    htmlView = contentArea.getElementsByClassName('html-view')[0];
-    modal = document.getElementsByClassName('modal')[0];
+    if (editor) {
+      toolbar = editor.getElementsByClassName('toolbar')[0];
+      buttons = toolbar.querySelectorAll('.btn:not(.has-submenu)');
+      contentArea = editor.getElementsByClassName('content-area')[0];
+      visuellView = contentArea.getElementsByClassName('visuell-view')[0];
+      htmlView = contentArea.getElementsByClassName('html-view')[0];
+      modal = document.getElementsByClassName('modal')[0];
 
-    // add active tag event
-    document.addEventListener('selectionchange', selectionChange);
+      // add active tag event
+      document.addEventListener('selectionchange', selectionChange);
 
-    // add toolbar button actions
-    for (let i = 0; i < buttons.length; i++) {
-      let button = buttons[i];
+      // add toolbar button actions
+      for (let i = 0; i < buttons.length; i++) {
+        let button = buttons[i];
 
-      button.addEventListener('click', function (e) {
-        let action = this.dataset.action;
-        if (!is_disabled) {
-          switch (action) {
-            case 'code':
-              execCodeAction(this, editor);
-              break;
-            case 'createLink':
-              execLinkAction();
-              break;
-            default:
-              execDefaultAction(action);
+        button.addEventListener('click', function (e) {
+          let action = this.dataset.action;
+          if (!is_disabled) {
+            switch (action) {
+              case 'code':
+                execCodeAction(this, editor);
+                break;
+              case 'createLink':
+                execLinkAction();
+                break;
+              default:
+                execDefaultAction(action);
+            }
           }
-        }
-      });
+        });
+      }
+      callback && start_observer();
+    } else if (document.querySelector('div')) {
+      setTimeout(init, 50);
     }
-    callback && start_observer();
-  }, 100);
+  };
+
+  typeof window !== 'undefined' && setTimeout(init, 100);
 
   // this function toggles between visual and html view
   function execCodeAction(button, editor) {
@@ -176,9 +190,9 @@ export default ({ callback, id = 'wysiwyg' + Date.now(), is_disabled = false, ht
         !elem?.tagName ||
         elem?.classList?.contains('visuell-view')
       )
-    )
+    ) {
       return false;
-
+    }
     let toolbarButton;
 
     // active by tag names
@@ -195,7 +209,7 @@ export default ({ callback, id = 'wysiwyg' + Date.now(), is_disabled = false, ht
       toolbarButton.classList.add('active');
     }
 
-    return parentTagActive(elem?.parentNode);
+    return (elem && parentTagActive(elem?.parentNode)) || false;
   }
 
   const start_observer = () => {
@@ -380,76 +394,73 @@ export default ({ callback, id = 'wysiwyg' + Date.now(), is_disabled = false, ht
     </style>`;
   return /*html*/ `
     ${css}
-        <div class="layout vertical editor ${is_disabled ? 'disabled' : ''}" id="${id}_editor" >
-          <div class="toolbar">
-              <div class="line">
-              
-              <div class="box">
-                  <span class="btn icon smaller" data-action="bold" data-tag-name="b" title="Bold">
-                  <img src="/resources/wysiwyg/bold.png">
-                  </span>
-                  <span class="btn icon smaller" data-action="italic" data-tag-name="i" title="Italic">
-                  <img src="/resources/wysiwyg/italic.png">
-                  </span>
-                  <span class="btn icon smaller" data-action="underline" data-tag-name="u" title="Underline">
-                  <img src="/resources/wysiwyg/underline.png">
-                  </span>
-                  <span class="btn icon smaller" data-action="strikeThrough" data-tag-name="strike" title="Strike through">
-                  <img src="/resources/wysiwyg/strike.png">
-                  </span>
-              </div>
-              
-              <div class="box">
-                  <span class="btn icon has-submenu">
-                  <img src="/resources/wysiwyg/left.png">
-                  <div class="submenu">
-                      <span class="btn icon" data-action="justifyLeft" data-style="textAlign:left" title="Justify left">
-                      <img src="/resources/wysiwyg/left.png">  
-                      </span>
-                      <span class="btn icon" data-action="justifyCenter" data-style="textAlign:center" title="Justify center">
-                      <img src="/resources/wysiwyg/center.png">  
-                      </span>
-                      <span class="btn icon" data-action="justifyRight" data-style="textAlign:right" title="Justify right">
-                      <img src="/resources/wysiwyg/right.png">  
-                      </span>
-                      <span class="btn icon" data-action="formatBlock" data-style="textAlign:justify" title="Justify block">
-                      <img src="/resources/wysiwyg/justify.png">  
-                      </span>
-                  </div>
-                  </span>
-                  <span class="btn icon" data-action="insertOrderedList" data-tag-name="ol" title="Insert ordered list">
-                  <img src="/resources/wysiwyg/ordered_list.png">  
-                  </span>
-                  <span class="btn icon" data-action="insertUnorderedList" data-tag-name="ul" title="Insert unordered list">
-                  <img src="/resources/wysiwyg/unordered_list.png">  
-                  </span>
-                  <span class="btn icon" data-action="outdent" title="Outdent">
-                  <img src="/resources/wysiwyg/outdent.png">  
-                  </span>
-                  <span class="btn icon" data-action="indent" title="Indent">
-                  <img src="/resources/wysiwyg/indent.png">  
-                  </span>
-                  
-              </div>
-              <div class="box">
-                  <span class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
-                  <img src="/resources/wysiwyg/rule.png">  
-                  </span>
-              </div>
-              
-              </div>
-              <div class="line">
-              
-              <div class="box">
-                  <span class="btn icon smaller" data-action="undo" title="Undo">
-                  <img src="/resources/wysiwyg/undo.png">
-                  </span>
-                  <span class="btn icon" data-action="removeFormat" title="Remove format">
-                  <img src="/resources/wysiwyg/remove.png">  
-                  </span>
-              </div>
-              
-              <div class="box">
+    <div class="layout vertical editor ${is_disabled ? 'disabled' : ''}" id="${id}_editor" >
+      <div class="toolbar">
+        <div class="line">
+        <div class="box">
+            <span class="btn icon smaller" data-action="bold" data-tag-name="b" title="Bold">
+            <img src="/resources/wysiwyg/bold.png" title="Bold">
+            </span>
+            <span class="btn icon smaller" data-action="italic" data-tag-name="i" title="Italic">
+            <img src="/resources/wysiwyg/italic.png" title="Italic">
+            </span>
+            <span class="btn icon smaller" data-action="underline" data-tag-name="u" title="Underline">
+            <img src="/resources/wysiwyg/underline.png" title="Underline">
+            </span>
+            <span class="btn icon smaller" data-action="strikeThrough" data-tag-name="strike" title="Strike through">
+            <img src="/resources/wysiwyg/strike.png" title="Strike through">
+            </span>
+        </div>
+        
+        <div class="box">
+            <span class="btn icon has-submenu">
+            <img src="/resources/wysiwyg/left.png" title="Justify">
+            <div class="submenu">
+                <span class="btn icon" data-action="justifyLeft" data-style="textAlign:left" title="Justify left">
+                <img src="/resources/wysiwyg/left.png" title="Justify left">  
+                </span>
+                <span class="btn icon" data-action="justifyCenter" data-style="textAlign:center" title="Justify center">
+                <img src="/resources/wysiwyg/center.png" title="Justify center">  
+                </span>
+                <span class="btn icon" data-action="justifyRight" data-style="textAlign:right" title="Justify right">
+                <img src="/resources/wysiwyg/right.png" title="Justify right">  
+                </span>
+                <span class="btn icon" data-action="formatBlock" data-style="textAlign:justify" title="Justify block">
+                <img src="/resources/wysiwyg/justify.png" title="Justify block">  
+                </span>
+            </div>
+            </span>
+            <span class="btn icon" data-action="insertOrderedList" data-tag-name="ol" title="Insert ordered list">
+            <img src="/resources/wysiwyg/ordered_list.png" title="Insert ordered list">  
+            </span>
+            <span class="btn icon" data-action="insertUnorderedList" data-tag-name="ul" title="Insert unordered list">
+            <img src="/resources/wysiwyg/unordered_list.png" title="Insert unordered list">  
+            </span>
+            <span class="btn icon" data-action="outdent" title="Outdent">
+            <img src="/resources/wysiwyg/outdent.png" title="Outdent">
+            </span>
+            <span class="btn icon" data-action="indent" title="Indent">
+            <img src="/resources/wysiwyg/indent.png" title="Indent">
+            </span>
+            </div>
+            <div class="box">
+                <span class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
+                <img src="/resources/wysiwyg/rule.png" title="Insert horizontal rule">  
+                </span>
+            </div>
+            
+            </div>
+            <div class="line">
+            
+            <div class="box">
+                <span class="btn icon smaller" data-action="undo" title="Undo">
+                <img src="/resources/wysiwyg/undo.png" title="Undo">
+                </span>
+                <span class="btn icon" data-action="removeFormat" title="Remove format">
+                <img src="/resources/wysiwyg/remove.png" title="Remove format">  
+                </span>
+            </div>
+            <div class="box">
                   <span class="btn icon smaller" data-action="createLink" title="Insert Link">
                   <img src="/resources/wysiwyg/link.png">
                   </span>
