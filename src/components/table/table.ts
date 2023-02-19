@@ -18,14 +18,15 @@ const css = /*css*/ `
             .table_header, .table_column{
                 padding: 2px 10px;
                 border: none;
-                text-align: center;
                 word-break: break-word;
             }
             .table_header{
+                text-align: center;
                 color: var(--theme-prim-forcolor);
                 background-color: var(--theme-prim-bgcolor);
             }
             .table_column{
+                text-align: left;
                 color: var(--subnav-prim-forcolor);
                 background-color: var(--theme-prim-forcolor);
                 overflow-x: hidden;

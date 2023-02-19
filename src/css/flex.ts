@@ -21,11 +21,17 @@ export default () => {
             -webkit-flex-direction: row;
             flex-direction: row;
         }
+        .layout.horizontal.start-justified{
+            text-align: left;
+        }
 
         .layout.vertical {
             -ms-flex-direction: column;
             -webkit-flex-direction: column;
             flex-direction: column;
+        }
+        .layout.vertical.start{
+            text-align: left;
         }
 
         .layout.wrap {

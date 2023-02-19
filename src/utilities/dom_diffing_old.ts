@@ -1,5 +1,5 @@
 // import { DiffDOM } from '/utilities/diff-dom/dist/index.js';
-// import DiffDOM from './dom_differ';
+import DiffDOM from './dom_differ';
 import morphdom from 'morphdom';
 // const morphdom = require("morphdom");
 
@@ -27,7 +27,7 @@ import morphdom from 'morphdom';
 
 export default (id, html, tag = 'div', el: Element | HTMLElement | null = null, use_dom_diff = false) => {
   // let DiffDOM: any = await import('./dom_differ');
-  // const diff = DiffDOM();
+  const diff = DiffDOM();
   // import { DiffDOM } from './diff-dom/dist/index.js';
   // import DiffDOM from "DiffDOM";
   // import DiffDOM from '../../node_modules/diff-dom/dist/index.js';
@@ -45,20 +45,12 @@ export default (id, html, tag = 'div', el: Element | HTMLElement | null = null, 
    */
   const current_el = el ? el : document.getElementById(id);
   if (current_el && use_dom_diff && typeof window !== 'undefined') {
-    // const dd = new diff.DiffDOM();
+    const dd = new diff.DiffDOM();
     // debugger;
     // const dd = DiffDOM;
-    // var el1 = document.createElement('div');
-    // el1.className = 'foo';
-
-    // var el2 = document.createElement('div');
-    // el2.className = 'bar';
-
-    // morphdom(el1, el2);
     if (current_el) {
-      morphdom(current_el, `<${tag} ${spread_attributes(current_el.attributes)}>${html}</${tag}>`);
-      // const diff = dd.diff(current_el, `<${tag} ${spread_attributes(current_el.attributes)}>${html}</${tag}>`);
-      // dd.apply(current_el, diff);
+      const diff = dd.diff(current_el, `<${tag} ${spread_attributes(current_el.attributes)}>${html}</${tag}>`);
+      dd.apply(current_el, diff);
     }
   } else if (current_el) {
     current_el.innerHTML = html;

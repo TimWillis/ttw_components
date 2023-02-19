@@ -13,6 +13,8 @@ export interface is_button_interface {
   id?: string;
   svg?: string;
   disabled?: boolean;
+  style?: string;
+  class?: string;
 }
 
 const default_options: is_button_interface = {

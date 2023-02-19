@@ -214,16 +214,24 @@ export default ({
 
   const start_observer = () => {
     const content = document.getElementById(id);
+    const blur_call = () => {
+      callback(content, content.innerHTML);
+    };
 
     // create a new instance of `MutationObserver` named `observer`,
     // passing it a callback function
 
     let debouncer = setTimeout(() => {}, 0);
     const observer = new MutationObserver((e) => {
-      clearTimeout(debouncer);
-      debouncer = setTimeout(() => {
-        callback(content, content.innerHTML);
-      }, 500);
+      if (!content.contains(document.activeElement)) {
+        clearTimeout(debouncer);
+        debouncer = setTimeout(() => {
+          callback(content, content.innerHTML);
+        }, 500);
+      } else {
+        content.removeEventListener('blur', blur_call);
+        content.addEventListener('blur', blur_call);
+      }
     });
 
     // call `observe()` on that MutationObserver instance,

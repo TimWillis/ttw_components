@@ -1,6 +1,14 @@
 // import firebase2 from "firebase/app";
 // import "firebase/storage";
-export default async (firebase2, fire_ref, elem, db_file_path: string, file_path: string, firebase_config) => {
+
+export default async (
+  storage,
+  fire_ref,
+  elem,
+  db_file_path: string,
+  file_path: string,
+  callback: (response: { name: string; url: string }) => void,
+) => {
   /** NOTE: add this back in
    * await import("firebase/storage");
    * */
@@ -16,8 +24,6 @@ export default async (firebase2, fire_ref, elem, db_file_path: string, file_path
   //     };
   //     document.head.appendChild(script);
   // });
-  firebase2.initializeApp(firebase_config, 'secondApp');
-  const storage = firebase2.app('secondApp').storage();
   // const storage = fire_ref.app().storage();
 
   // Create a reference to the storage location where you want to store the files
@@ -70,10 +76,18 @@ export default async (firebase2, fire_ref, elem, db_file_path: string, file_path
         }),
       ).then((values) => {
         values.forEach((value) => {
-          fire_ref.child('files').child(db_file_path).push({
+          const data = {
             name: value.name,
             url: value.url,
-          });
+          };
+          fire_ref
+            .child('files')
+            .child(db_file_path)
+            .push(data)
+            .then(() => {
+              console.log('success');
+              callback(data);
+            });
         });
       });
     }
