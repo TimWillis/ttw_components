@@ -64,7 +64,7 @@ export default (root_path = '', token?, re_auth?) => {
   const update_data = async (path: string) => {
     const new_data = await get_rest(path).catch((e) => {
       throw e;
-  });;
+    });
     if (new_data) {
       set_idb(path, new_data);
     }
@@ -196,13 +196,30 @@ export default (root_path = '', token?, re_auth?) => {
       return await set_idb(path, null);
     }
   };
+  const fb = function (firebase, url, fb_verb, fb_type, limit?, keyword?, search_field?) {
+    return new Promise(function (resolve, reject) {
+      //                ref_places = ttw.fb_ref(url);
+      var ref_places = firebase.database().ref(url);
+      if (keyword && search_field) {
+        ref_places = ref_places
+          .orderByChild(search_field)
+          .startAt(keyword)
+          .endAt(keyword + '\uf8ff');
+      }
+      ref_places = limit ? ref_places.limitToFirst(limit) : ref_places;
+      ref_places[fb_verb](fb_type, function (snapshot) {
+        var value = { data: snapshot.val(), time_stamp: Date.now() };
+        resolve(value);
+      });
+    });
+  };
 
   // const archive = async (path, is_archived) => {
   //     data.last_updated = Date.now();
   //     return await set_idb(path, null);
   // };
 
-  return { get, post, put, del, post_rest };
+  return { get, post, put, del, post_rest, fb };
 };
 
 // let root_path = 'https://testautomationapidev.azurewebsites.net/api/';

@@ -68,18 +68,18 @@ export default ({
   };
   setTimeout(() => {
     const input_el = document.getElementById(id) as HTMLInputElement | null;
-    input_el.addEventListener('keyup', (e) => {
+    input_el?.addEventListener('keyup', (e) => {
       callback
         ? callback(e, create_data_list, true)
         : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
     //create_data_list(list);
-    input_el.addEventListener('focus', (e) => {
+    input_el?.addEventListener('focus', (e) => {
       callback
         ? callback(e, create_data_list, true)
         : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
-    input_el.addEventListener('blur', (e) => {
+    input_el?.addEventListener('blur', (e) => {
       setTimeout(() => {
         if (select_only) {
           input_el.value = current_list.find((item) => item.value === input_el.value) ? input_el.value : '';
@@ -92,7 +92,7 @@ export default ({
     ${css}
     <div class='layout vertical' id='${id}_container'> 
         <div class='list_container layout vertical'>
-          <input list="${id}" value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
+          <input type='text' value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
             <div   style="overflow: visible; height: 0;">
               <div id="${id}_items"  
                 style="overflow-y: auto; overflow-x: visible;width: fit-content;  max-height: 100px; height: auto; border: 1px solid lightgrey; 
