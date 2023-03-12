@@ -47,12 +47,13 @@ export default ({
     current_list = list;
     dom_diffing(
       id + '_items',
-      list
-        ? list
-            .map((sib) => {
-              return `<div data-value="${sib.value}" style='height: 1.5em; width: fit-content;' class='autocomplete_item'>${sib.name}</div>`;
-            })
-            .join('')
+      list && list.length
+        ? `<div style="overflow-y: auto;overflow-x: hidden; width: 100%; max-width: 100%;  max-height: 100px; border: 1px solid lightgrey; 
+        position: relative; background-color: white; ">${list
+          .map((sib) => {
+            return `<div data-value="${sib.value}" style='height: fit-content; width: 100%;' class='autocomplete_item'>${sib.name}</div>`;
+          })
+          .join('')}</div>`
         : '',
       'div',
     );
@@ -94,9 +95,7 @@ export default ({
         <div class='list_container layout vertical'>
           <input type='text' value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
             <div   style="overflow: visible; height: 0;">
-              <div id="${id}_items"  
-                style="overflow-y: auto; overflow-x: visible;width: fit-content;  max-height: 100px; height: auto; border: 1px solid lightgrey; 
-                position: relative; background-color: white; white-space: nowrap;">
+              <div id="${id}_items"  >
               </div> 
             </div> 
         </div>

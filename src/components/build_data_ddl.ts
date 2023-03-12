@@ -16,7 +16,6 @@ export default async (
   callback?: (e: { stopPropagation: () => void; preventDefault: () => void }, value: any) => void,
   data_id: string = 'id',
   data_name: string = 'name',
-  data_name_2?: string,
 ) => {
   // const url = "TestGen/GetRoles";
   const data = await dl()
@@ -33,7 +32,7 @@ export default async (
     const values = data.map((value: any) => {
       return {
         value: value[data_id],
-        name: data_name_2 ? value[data_name] + ' - ' + value[data_name_2] : value[data_name],
+        name: value[data_name],
       };
     });
     values.unshift({ value: '', name: 'Select ' + name });

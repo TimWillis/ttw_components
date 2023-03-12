@@ -2,6 +2,17 @@ import * as idb_keyvalue from './idb_keyvalue';
 
 export type get_type = 'idb' | 'post' | 'rest' | 'both';
 
+export interface fb_i {
+  firebase: any;
+  url: string;
+  fb_verb: string;
+  fb_type?: string;
+  limit?: number;
+  keyword?: string;
+  search_field?: string;
+  post_data?: any;
+}
+
 export default (root_path = '', token?, re_auth?) => {
   const one_day = 24 * 60 * 60 * 1000;
   const headers = new Headers();
@@ -30,7 +41,7 @@ export default (root_path = '', token?, re_auth?) => {
         if (response.status == 200) {
           res = response.json();
         } else if (response.status === 401) {
-          re_auth();
+          re_auth && re_auth();
           throw response;
         } else {
           throw response;
@@ -71,7 +82,9 @@ export default (root_path = '', token?, re_auth?) => {
   };
 
   const get = async (path: string, from_last_update = Date.now() - one_day, type: get_type = 'both', post_data?) => {
-    let data = await get_idb(path);
+    let data = await get_idb(path).catch((e) => {
+      console.error(e);
+    });
     if (!data && type !== 'idb') {
       data =
         type === 'post'
@@ -158,7 +171,7 @@ export default (root_path = '', token?, re_auth?) => {
         if (response.status == 200) {
           res = response.text();
         } else if (response.status === 401) {
-          re_auth();
+          re_auth && re_auth();
           throw response;
         } else {
           throw response;
@@ -196,21 +209,30 @@ export default (root_path = '', token?, re_auth?) => {
       return await set_idb(path, null);
     }
   };
-  const fb = function (firebase, url, fb_verb, fb_type, limit?, keyword?, search_field?) {
+
+  const fb = function ({ firebase, url, fb_verb, fb_type, limit, keyword, search_field, post_data }: fb_i) {
     return new Promise(function (resolve, reject) {
       //                ref_places = ttw.fb_ref(url);
-      var ref_places = firebase.database().ref(url);
-      if (keyword && search_field) {
-        ref_places = ref_places
-          .orderByChild(search_field)
-          .startAt(keyword)
-          .endAt(keyword + '\uf8ff');
+      var ref = firebase.database().ref(url);
+      if (!post_data) {
+        if (keyword && search_field) {
+          ref = ref
+            .orderByChild(search_field)
+            .startAt(keyword)
+            .endAt(keyword + '\uf8ff');
+        }
+        ref = limit ? ref.limitToFirst(limit) : ref;
+        ref[fb_verb](fb_type, function (snapshot) {
+          var value = { data: snapshot.val(), time_stamp: Date.now() };
+          resolve(value);
+        });
+      } else {
+        ref[fb_verb](post_data).then(() => {
+          console.log('success');
+          // var value = { data: snapshot.val(), time_stamp: Date.now() };
+          resolve(true);
+        });
       }
-      ref_places = limit ? ref_places.limitToFirst(limit) : ref_places;
-      ref_places[fb_verb](fb_type, function (snapshot) {
-        var value = { data: snapshot.val(), time_stamp: Date.now() };
-        resolve(value);
-      });
     });
   };
 
