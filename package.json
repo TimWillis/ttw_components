@@ -36,7 +36,6 @@
   },
   "homepage": "https://github.com/TimWillis/ttw_components#readme",
   "dependencies": {
-    "diff-dom": "^4.2.8",
     "flatpickr": "^4.6.13",
     "morphdom": "^2.7.0",
     "typescript": "^4.9.4"

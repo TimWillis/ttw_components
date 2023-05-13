@@ -176,7 +176,9 @@ export default ({
   function selectionChange() {
     for (let i = 0; i < buttons.length; i++) {
       let button = buttons[i];
-      button.classList.remove('active');
+      if (button.dataset.action !== 'code' && button.dataset.action !== 'createLink') {
+        button.classList.remove('active');
+      }
     }
 
     parentTagActive(window.getSelection().anchorNode?.parentNode);
@@ -293,7 +295,7 @@ export default ({
             width: 6px;
             height: 6px;
             position: absolute;
-            background-image: url(https://image.flaticon.com/icons/svg/25/25243.svg);
+            background-image: url(/resources/wysiwyg/center.png);
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;

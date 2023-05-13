@@ -13,7 +13,8 @@ export interface fb_i {
   post_data?: any;
 }
 
-export default (root_path = '', token?, re_auth?) => {
+export default (root_path = '', token?, re_auth?, idb_version = "1") => {
+  idb_version = idb_version + "/";
   const one_day = 24 * 60 * 60 * 1000;
   const headers = new Headers();
   const bearer = 'Bearer ' + token;
@@ -63,7 +64,7 @@ export default (root_path = '', token?, re_auth?) => {
   };
 
   const get_idb = (path: string) => {
-    return idb_keyvalue.get(path).then((val: any) => {
+    return idb_keyvalue.get(idb_version+path).then((val: any) => {
       if (val) {
         val.data = val.data ? val.data : val;
         val.last_fetch = val.last_fetch ? val.last_fetch : Date.now();
@@ -126,7 +127,7 @@ export default (root_path = '', token?, re_auth?) => {
 
   const set_idb = (path: string, data: any) => {
     return idb_keyvalue
-      .set(path, data)
+      .set(idb_version+path, data)
       .then(() => {
         console.log('Data saved!');
       })
@@ -170,6 +171,8 @@ export default (root_path = '', token?, re_auth?) => {
 
         if (response.status == 200) {
           res = response.text();
+        } else if (response.status == 204) {
+          res = null;
         } else if (response.status === 401) {
           re_auth && re_auth();
           throw response;

@@ -12,11 +12,12 @@ export default async (
   url: string,
   name: string,
   container_name: string,
-  id: string = unique_id(6),
+  id: string = unique_id(6, 'alpha'),
   callback?: (e: { stopPropagation: () => void; preventDefault: () => void }, value: any) => void,
   data_id: string = 'id',
   data_name: string = 'name',
   data_name_2?: string,
+  is_disabled?: boolean,
 ) => {
   // const url = "TestGen/GetRoles";
   const data = await dl()
@@ -45,6 +46,7 @@ export default async (
           id: id,
           selected_value: selected_value,
           callback: callback,
+          is_disabled: is_disabled,
         }),
         for_id: id,
         name: name,

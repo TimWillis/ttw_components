@@ -8,8 +8,10 @@ export default (id: string, value: string) => {
     if (elem) {
       // const { DateRangePicker } = await import('vanillajs-datepicker');
       const rangepicker = flatpickr(elem, {
-        // ...options
-      });
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: ["2016-10-10", "2016-10-20"]
+    });
       setTimeout(() => {
         const start_date = document.getElementById(`start_date_${id}`);
         const end_date = document.getElementById(`end_date_${id}`);

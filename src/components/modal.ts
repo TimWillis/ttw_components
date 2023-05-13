@@ -56,7 +56,10 @@ export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }
         .modal_container{
             height: 0;
             width: 0;
-            z-index: 100;
+            z-index: 9999;    
+            position: fixed;
+            top: 0;
+            left: 0;
         }
         .modal_cover{
             position: absolute;

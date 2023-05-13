@@ -1,4 +1,9 @@
-export default function (callback, logged_out_default_page = 'sign_in', logged_in_default_page = 'home',  base_route = '/') {
+export default function (
+  callback,
+  logged_out_default_page = 'sign_in',
+  logged_in_default_page = 'home',
+  base_route = '/',
+) {
   let last_route = '';
   const router = function (event?: any) {
     const location_split = location.pathname.replace(base_route, '').split('/');
@@ -8,7 +13,8 @@ export default function (callback, logged_out_default_page = 'sign_in', logged_i
     route = !route ? logged_out_default_page : route;
     route = user_json && (!route || route === logged_out_default_page) ? logged_in_default_page : route;
     // route = route.replace('popup/', '');
-    if (route !== last_route) {
+
+    if (route !== last_route && !route.includes('undefined')) {
       route = route === '' ? logged_in_default_page : route;
       let page = base_route + route;
       const stateObj = { page: page };

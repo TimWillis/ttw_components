@@ -4,7 +4,7 @@ export default (
   list: any[],
   type: 'table' | 'bubble' | 'comma' | 'dash',
   is_link: boolean,
-  id: string = unique_id(6),
+  id: string = unique_id(6, 'alpha'),
   grow_wider: boolean = true,
   root: Document | ShadowRoot = document,
   callback?: (e: any, id: string, list: any) => void,
@@ -12,10 +12,14 @@ export default (
   const create_list = (l) => {
     return l
       ?.map((item) => {
-        return `<div class='list_item layout horizontal type_${type} '>
+        return `<div data-id="${item.id}" class='list_item layout horizontal type_${type} '>
         ${is_link ? `<a target="_blank" href="${item.value}">${item.value}</a>` : item.value}
         ${type === 'table' ? `<div class='flex'></div>` : ''}
-        ${callback && item.deletable !== false ? `<div class='close' data-id="${item.id}">X</div>` : ''}
+        ${
+          callback && item.deletable !== false
+            ? `<div class='close' data-id="${item.id}" data-xid="${item.id}">X</div>`
+            : ''
+        }
     </div>
 `;
       })
@@ -25,7 +29,7 @@ export default (
     root.querySelector(`#${id}`)?.addEventListener('click', (e) => {
       ////debugger;
       const dataset: any = e.target ? e.target['dataset'] : {};
-      if (dataset.id) {
+      if (dataset.xid) {
         list = list.filter((item) => item.id !== dataset.id);
         callback(e, id, list);
         dom_diffing(id, create_list(list), 'div', root.querySelector(`#${id}`)?.querySelector('#list_container'));

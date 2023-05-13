@@ -11,6 +11,7 @@ export interface this_interface {
   value?: string;
   placeholder?: string;
   select_only?: boolean;
+  is_disabled?: boolean;
 }
 
 export default ({
@@ -20,6 +21,7 @@ export default ({
   id = 'list_' + Date.now(),
   placeholder = 'Select Value',
   select_only = false,
+  is_disabled = false,
 }: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
@@ -93,7 +95,9 @@ export default ({
     ${css}
     <div class='layout vertical' id='${id}_container'> 
         <div class='list_container layout vertical'>
-          <input type='text' value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
+          <input type='text' ${
+            is_disabled ? 'disabled' : ''
+          } value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
             <div   style="overflow: visible; height: 0;">
               <div id="${id}_items"  >
               </div> 

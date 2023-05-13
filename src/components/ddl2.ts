@@ -94,13 +94,11 @@ ddl_interface) => {
     // options.style.display = options.style.display === 'block' ? 'none' : 'block';
   };
 
-  window[name_space][id] = (e: {
-    target: { dataset: { value: string }; parentElement: { dataset: { value: any } } };
-  }) => {
+  window[name_space][id] = (e: any) => {
     const value = root.getElementById('value_' + id);
-    value.innerHTML = e.target.dataset.value || e.target.parentElement.dataset.value;
+    value.innerHTML = e.currentTarget.innerText; //e.target.dataset.value || e.target.parentElement.dataset.value;
     if (callback) {
-      callback(e, e.target.dataset.value);
+      callback(e, e.currentTarget.dataset.value);
     }
     // open_close();
   };

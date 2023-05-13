@@ -1,4 +1,4 @@
-export default (N = 1, type = 'alpha_numeric') => {
+export default (N = 7, type = 'alpha_numeric') => {
   const s =
     type === 'alpha_numeric'
       ? 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'

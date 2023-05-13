@@ -1,6 +1,6 @@
 import * as ddl_mod from './components/ddl';
 import * as ddl_mod2 from './components/ddl2';
-import * as build_data_ddl_mod from './components/ddl_db';
+import * as ddl_db_mod from './components/ddl_db';
 import * as date_picker_mod from './components/date_picker';
 import * as date_range_picker_mod from './components/date_range_picker';
 import * as date_picker_style_mod from './css/date_picker_style';
@@ -26,6 +26,7 @@ import * as fb_file_uploader_mod from './components/fb_file_uploader';
 
 // import * as layout_mod from './components/layout/layout';
 import * as dom_diffing_mod from './utilities/dom_diffing';
+import * as object_to_array_mod from './utilities/object_to_array';
 import * as add_event_listener_mod from './utilities/add_event_listener';
 import * as anonymous_user_mod from './utilities/anonymous_user';
 import * as convert_style_obj_mod from './utilities/convert_style_obj';
@@ -57,7 +58,7 @@ import * as animations_mod from './css/animations';
 
 export const ddl = ddl_mod.default;
 export const ddl2 = ddl_mod2.default;
-export const build_data_ddl = build_data_ddl_mod.default;
+export const ddl_db = ddl_db_mod.default;
 export const date_picker = date_picker_mod.default;
 export const date_range_picker = date_range_picker_mod.default;
 export const date_picker_style = date_picker_style_mod.default;
@@ -92,6 +93,7 @@ export const form_validation = form_validation_mod.default;
 export const get_date = get_date_mod.default;
 export const group_by = group_by_mod.default;
 export const data_layer = data_layer_mod.default;
+export const object_to_array = object_to_array_mod.default;
 export const idb_keyvalue = idb_keyvalue_mod;
 export const dom_to_json = dom_to_json_mod.default;
 export const image_resize = image_resize_mod.default;
