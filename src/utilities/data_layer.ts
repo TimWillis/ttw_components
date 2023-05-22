@@ -13,8 +13,8 @@ export interface fb_i {
   post_data?: any;
 }
 
-export default (root_path = '', token?, re_auth?, idb_version = "1") => {
-  idb_version = idb_version + "/";
+export default (root_path = '', token?, re_auth?, idb_version = '1') => {
+  idb_version = idb_version + '/';
   const one_day = 24 * 60 * 60 * 1000;
   const headers = new Headers();
   const bearer = 'Bearer ' + token;
@@ -64,7 +64,7 @@ export default (root_path = '', token?, re_auth?, idb_version = "1") => {
   };
 
   const get_idb = (path: string) => {
-    return idb_keyvalue.get(idb_version+path).then((val: any) => {
+    return idb_keyvalue.get(idb_version + path).then((val: any) => {
       if (val) {
         val.data = val.data ? val.data : val;
         val.last_fetch = val.last_fetch ? val.last_fetch : Date.now();
@@ -127,7 +127,7 @@ export default (root_path = '', token?, re_auth?, idb_version = "1") => {
 
   const set_idb = (path: string, data: any) => {
     return idb_keyvalue
-      .set(idb_version+path, data)
+      .set(idb_version + path, data)
       .then(() => {
         console.log('Data saved!');
       })
@@ -239,12 +239,202 @@ export default (root_path = '', token?, re_auth?, idb_version = "1") => {
     });
   };
 
+  //{ firebase, url, fb_verb, fb_type, limit, keyword, search_field, post_data }: fb_i
+  const fs = async ({ firestore, url, data, query, idb_version = '1', timestamp }) => {
+    return new Promise(function (resolve, reject) {
+      if (data) {
+        if (data.type === 'add') {
+          delete data.type;
+
+          firestore
+            .collection(url)
+            .add(data.add_data)
+            .then(function (docRef) {
+              data.add_data['id'] = docRef.id;
+              console.log('Data Added to Firestore');
+              console.log(data.add_data);
+              resolve(data.add_data);
+            })
+            ['catch'](function (err) {
+              console.log(err);
+              resolve(err);
+            });
+        } else if (data.type === 'update') {
+          delete data.type;
+          data.update_data.last_updated = timestamp;
+
+          firestore
+            .collection(url)
+            .doc(data.id)
+            .update(data.update_data)
+            .then(function () {
+              console.log('Data has been set to Firestore');
+              resolve({ response: 200, messsage: 'Data has been set to Firestore' });
+            })
+            ['catch'](function (err) {
+              console.log(err);
+            });
+        } else if (data.type === 'edit') {
+          delete data.type;
+
+          firestore
+            .collection(url)
+            .doc(data.id)
+            .set(data.set_data, { merge: true })
+            .then(function () {
+              console.log('Data has been set to Firestore');
+              resolve({ response: 200, messsage: 'Data has been set to Firestore' });
+            })
+            ['catch'](function (err) {
+              console.log(err);
+            });
+        } else if (data.type === 'delete') {
+          firestore
+            .collection(url)
+            .doc(data.id)
+            ['delete']()
+            .then(function () {
+              console.log('Data has been deleted from Firestore');
+              resolve({ response: 200, messsage: 'Data has been deleted from Firestore' });
+            })
+            ['catch'](function (err) {
+              console.log(err);
+            });
+        }
+      } else {
+        if (query) {
+          if (query[0].type === 'where') {
+            (function () {
+              var fs = firestore.collection(url);
+              query.forEach(function (q) {
+                if (q.type === 'where') {
+                  fs = fs.where(q.fieldName, q.type_func, q.fieldValue);
+                }
+              });
+              fs.get()
+                .then(function (querySnapshot) {
+                  var data = [];
+                  if (querySnapshot.empty == false) {
+                    querySnapshot.forEach(function (doc) {
+                      // console.log(doc.id);
+                      var tmp_data = doc.data();
+                      tmp_data.id = doc.id;
+                      if (tmp_data.user_ref) delete tmp_data.user_ref;
+                      data.push(tmp_data);
+                    });
+                    var value = {
+                      data: data,
+                      time_stamp: Date.now(),
+                      idb_version: idb_version,
+                    };
+                    resolve(value);
+                  } else {
+                    resolve({
+                      exists: false,
+                      url: url,
+                      data_info: {
+                        id: firestore.collection(url).doc().id,
+                      },
+                    });
+                  }
+                })
+                ['catch'](function (err) {
+                  console.log(err);
+                });
+            })();
+          }
+        } else if (url.includes('/')) {
+          (function () {
+            var url_parts = url.split('/');
+            var toggle_collection_document = true;
+            // var firestore = firebase.firestore;
+            url_parts.forEach(function (url_part) {
+              firestore = toggle_collection_document ? firestore.collection(url_part) : firestore.doc(url_part);
+              toggle_collection_document = !toggle_collection_document;
+            });
+
+            firestore
+              .get()
+              .then(function (docs) {
+                if (url_parts.length % 2) {
+                  (function () {
+                    var data = [];
+                    if (docs.empty == false) {
+                      docs.forEach(function (doc) {
+                        console.log(doc.id);
+                        var tmp_data = doc.data();
+                        tmp_data.id = doc.id;
+                        if (tmp_data.user_ref) delete tmp_data.user_ref;
+                        data.push(tmp_data);
+                      });
+                      var value = {
+                        data: data,
+                        time_stamp: Date.now(),
+                        idb_version: idb_version,
+                      };
+                      resolve(value);
+                    } else {
+                      resolve({
+                        exists: false,
+                        url: url,
+                        data_info: {
+                          id: firestore.collection(url).doc().id,
+                        },
+                      });
+                    }
+                  })();
+                } else {
+                  var _data = undefined;
+                  if (docs.exists) {
+                    _data = docs.data();
+                  } else {
+                    console.error('No such document!');
+                  }
+                  var value = {
+                    data: _data,
+                    time_stamp: Date.now(),
+                    idb_version: idb_version,
+                  };
+                  resolve(value);
+                }
+              })
+              ['catch'](function (err) {
+                console.log(err);
+              });
+          })();
+        } else {
+          firestore
+            .collection(url)
+            .get()
+            .then(function (docs) {
+              var data = [];
+              docs.forEach(function (doc) {
+                var new_data = doc.data();
+                new_data._id = doc.id;
+                if (new_data.user_ref) delete new_data.user_ref;
+                data.push(new_data);
+              });
+              var value = {
+                data: data,
+                time_stamp: Date.now(),
+                idb_version: idb_version,
+              };
+              resolve(value);
+            })
+            ['catch'](function (err) {
+              console.log(err);
+            });
+        }
+      }
+    });
+  };
+
   // const archive = async (path, is_archived) => {
   //     data.last_updated = Date.now();
   //     return await set_idb(path, null);
   // };
 
-  return { get, post, put, del, post_rest, fb };
+  return { get, post, put, del, post_rest, fb, fs };
 };
 
 // let root_path = 'https://testautomationapidev.azurewebsites.net/api/';
