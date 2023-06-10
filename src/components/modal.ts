@@ -109,4 +109,7 @@ export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }
   // modal.innerHTML = modal_html;
   const body: any = document.body;
   body.appendChild(modal);
+  return () => {
+    modal.remove();
+  }
 };

@@ -1,23 +1,35 @@
 /*https://codepen.io/WebDEasy/pen/YoVmBx*/
 
 import dom_diffing from '../utilities/dom_diffing';
+import svg from './svg';
+
+interface feature {
+  name: string;
+  action: (e: any) => void;
+}
 
 export interface this_interface {
   callback?: (e: any, value: string) => void;
   id?: string;
   html: string;
-  style?: string;
   is_disabled?: boolean;
+  hidden_features?: string[];
+  custom_features?: feature[];
+  style?: any;
   base_url?: string;
+  name_space?: string;
 }
 
 export default ({
   callback,
   id = 'wysiwyg' + Date.now(),
-  is_disabled = false,
   html,
+  is_disabled = false,
+  hidden_features = [],
+  custom_features = [],
   style,
   base_url = '/resources',
+  name_space = '_ttw',
 }: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
@@ -43,6 +55,7 @@ export default ({
 
         button.addEventListener('click', function (e) {
           let action = this.dataset.action;
+          let value = this.dataset.value;
           if (!is_disabled) {
             switch (action) {
               case 'code':
@@ -52,7 +65,7 @@ export default ({
                 execLinkAction();
                 break;
               default:
-                execDefaultAction(action);
+                execDefaultAction(action, value);
             }
           }
         });
@@ -136,9 +149,24 @@ export default ({
   }
 
   // executes normal actions
-  function execDefaultAction(action) {
-    document.execCommand(action, false);
+  //*https://stackoverflow.com/questions/60581285/execcommand-is-now-obsolete-whats-the-alternative
+  function execDefaultAction(action, value = null) {
+    document.execCommand(action, false, value);
   }
+
+  // const execDefaultAction2 = (action) => {
+  //     const selection = window.getSelection();
+  //     if (!selection.rangeCount) return;
+
+  //     const range = selection.getRangeAt(0);
+  //     const selectedText = range.cloneContents();
+
+  //     const boldElement = document.createElement('b');
+  //     boldElement.appendChild(selectedText);
+
+  //     range.deleteContents();
+  //     range.insertNode(boldElement);
+  // };
 
   // saves the current selection
   function saveSelection() {
@@ -250,7 +278,7 @@ export default ({
             
         }
         .editor {
-            min-height: 200px;
+            min-height: ${style?.height ? style.height : '200px'};
             background-color: white;
           }
           .editor .toolbar {
@@ -283,6 +311,10 @@ export default ({
             width: 15px;
             padding: 10px;
           }
+          .editor .toolbar .line .box .submenu .btn.icon img {
+            width: 15px;
+            padding: 4px;
+          }
           .editor .toolbar .line .box .btn.icon.smaller img {
             width: 12px;
           }
@@ -304,7 +336,7 @@ export default ({
           .editor .toolbar .line .box .btn.has-submenu .submenu {
             display: none;
             position: absolute;
-            top: 36px;
+            top: 34px;
             left: -1px;
             z-index: 10;
             background-color: #FFF;
@@ -335,7 +367,8 @@ export default ({
             outline: none;
             display: none;
             width: 100%;
-            height: 200px;
+            max-height: 200px;
+            height: 100%;
             border: none;
             resize: none;
           }
@@ -401,29 +434,90 @@ export default ({
           .disabled .editor .toolbar .line .box .btn:hover, .editor .toolbar .line .box .btn {
             cursor: default !important;
           }
+          .editor button{
+            padding: 5px 4px;
+            margin: 2px 4px;
+          }
     </style>`;
+
+  const create_custom_features = (custom_features) => {
+    let html = '';
+    typeof window[name_space] === 'undefined' && (window[name_space] = {});
+    custom_features.forEach((feature) => {
+      const name = feature.name.replaceAll(' ', '_');
+      window[name_space][name + '_button'] = feature.action;
+      html += /*html*/ `
+        <div class="box">
+          <button class="btn" onclick="${name_space}.${name + '_button'}(event)" data-action="${feature.name}" >
+            ${feature.name}
+          </button>
+        </div>`;
+    });
+
+    return html;
+  };
+
   return /*html*/ `
     ${css}
     <div class="layout vertical editor ${is_disabled ? 'disabled' : ''}" id="${id}_editor" >
       <div class="toolbar">
-        <div class="line">
+        <div class="line layout horizontal wrap">
         <div class="box">
-            <span class="btn icon smaller" data-action="bold" data-tag-name="b" title="Bold">
+            <span ${
+              hidden_features.includes('bold') ? 'hidden' : ''
+            } class="btn icon smaller" data-action="bold" data-tag-name="b" title="Bold">
             <img src="/resources/wysiwyg/bold.png" title="Bold">
             </span>
-            <span class="btn icon smaller" data-action="italic" data-tag-name="i" title="Italic">
+            <span ${
+              hidden_features.includes('italic') ? 'hidden' : ''
+            } class="btn icon smaller" data-action="italic" data-tag-name="i" title="Italic">
             <img src="/resources/wysiwyg/italic.png" title="Italic">
             </span>
-            <span class="btn icon smaller" data-action="underline" data-tag-name="u" title="Underline">
+            <span ${
+              hidden_features.includes('underline') ? 'hidden' : ''
+            } class="btn icon smaller" data-action="underline" data-tag-name="u" title="Underline">
             <img src="/resources/wysiwyg/underline.png" title="Underline">
             </span>
-            <span class="btn icon smaller" data-action="strikeThrough" data-tag-name="strike" title="Strike through">
+            <span ${
+              hidden_features.includes('strikeThrough') ? 'hidden' : ''
+            } class="btn icon smaller" data-action="strikeThrough" data-tag-name="strike" title="Strike through">
             <img src="/resources/wysiwyg/strike.png" title="Strike through">
             </span>
         </div>
+        <div class="box">
+            <span ${hidden_features.includes('color') ? 'hidden' : ''} class="btn icon has-submenu">
+              ${svg().html('M11 3L5.5 17h2.25l1.12-3h6.25l1.12 3h2.25L13 3h-2zm-1.38 9L12 5.67 14.38 12H9.62z', 'red')}
+              <div class="submenu">
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="red" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='red'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="blue" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='blue'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="yellow" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='yellow'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="green" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='green'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="purple" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='purple'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="orange" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='orange'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="black" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='black'/%3E%3C/svg%3E">
+                </span>
+                <span style=' ' class="btn icon" data-action="foreColor" data-value="white" data-style="textAlign:left" title="Justify left">
+                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Crect width='30' height='20' fill='white'/%3E%3C/svg%3E">
+                </span>
+              </div>
+            </span>
+          </div>
         
         <div class="box">
-            <span class="btn icon has-submenu">
+            <span ${hidden_features.includes('justify') ? 'hidden' : ''} class="btn icon has-submenu">
             <img src="/resources/wysiwyg/left.png" title="Justify">
             <div class="submenu">
                 <span class="btn icon" data-action="justifyLeft" data-style="textAlign:left" title="Justify left">
@@ -440,52 +534,72 @@ export default ({
                 </span>
             </div>
             </span>
-            <span class="btn icon" data-action="insertOrderedList" data-tag-name="ol" title="Insert ordered list">
+            <span ${
+              hidden_features.includes('ordered list') ? 'hidden' : ''
+            } class="btn icon" data-action="insertOrderedList" data-tag-name="ol" title="Insert ordered list">
             <img src="/resources/wysiwyg/ordered_list.png" title="Insert ordered list">  
             </span>
-            <span class="btn icon" data-action="insertUnorderedList" data-tag-name="ul" title="Insert unordered list">
+            <span ${
+              hidden_features.includes('unordered list') ? 'hidden' : ''
+            } class="btn icon" data-action="insertUnorderedList" data-tag-name="ul" title="Insert unordered list">
             <img src="/resources/wysiwyg/unordered_list.png" title="Insert unordered list">  
             </span>
-            <span class="btn icon" data-action="outdent" title="Outdent">
+            <span ${
+              hidden_features.includes('outdent') ? 'hidden' : ''
+            } class="btn icon" data-action="outdent" title="Outdent">
             <img src="/resources/wysiwyg/outdent.png" title="Outdent">
             </span>
-            <span class="btn icon" data-action="indent" title="Indent">
+            <span ${
+              hidden_features.includes('indent') ? 'hidden' : ''
+            } class="btn icon" data-action="indent" title="Indent">
             <img src="/resources/wysiwyg/indent.png" title="Indent">
             </span>
             </div>
             <div class="box">
-                <span class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
+                <span ${
+                  hidden_features.includes('horizontal rule') ? 'hidden' : ''
+                } class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
                 <img src="/resources/wysiwyg/rule.png" title="Insert horizontal rule">  
                 </span>
             </div>
             
-            </div>
-            <div class="line">
             
             <div class="box">
-                <span class="btn icon smaller" data-action="undo" title="Undo">
+                <span ${
+                  hidden_features.includes('undo') ? 'hidden' : ''
+                } class="btn icon smaller" data-action="undo" title="Undo">
                 <img src="/resources/wysiwyg/undo.png" title="Undo">
                 </span>
-                <span class="btn icon" data-action="removeFormat" title="Remove format">
+                <span ${
+                  hidden_features.includes('remove format') ? 'hidden' : ''
+                } class="btn icon" data-action="removeFormat" title="Remove format">
                 <img src="/resources/wysiwyg/remove.png" title="Remove format">  
                 </span>
             </div>
             <div class="box">
-                  <span class="btn icon smaller" data-action="createLink" title="Insert Link">
+                  <span ${
+                    hidden_features.includes('link') ? 'hidden' : ''
+                  } class="btn icon smaller" data-action="createLink" title="Insert Link">
                   <img src="/resources/wysiwyg/link.png">
                   </span>
-                  <span class="btn icon smaller" data-action="unlink" data-tag-name="a" title="Unlink">
+                  <span ${
+                    hidden_features.includes('unlink') ? 'hidden' : ''
+                  } class="btn icon smaller" data-action="unlink" data-tag-name="a" title="Unlink">
                   <img src="/resources/wysiwyg/unlink.png">
                   </span>
-              </div>
+            </div>
               
-              <div class="box">
-                  <span class="btn icon" data-action="code" title="Show HTML-Code">
-                  <img src="/resources/wysiwyg/html.png">
-                  </span>
-              </div>
+            <div class="box">
+                <span ${
+                  hidden_features.includes('code') ? 'hidden' : ''
+                } class="btn icon" data-action="code" title="Show HTML-Code">
+                <img src="/resources/wysiwyg/html.png">
+                </span>
+            </div>
+                ${create_custom_features(custom_features)}
+
+          </div>
               
-              </div>
           </div>
           <div class="layout vertical content-area flex">
               <div id="${id}" class="flex visuell-view " ${is_disabled ? '' : 'contenteditable'} >
