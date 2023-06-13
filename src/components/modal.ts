@@ -8,22 +8,32 @@ export interface this_interface {
   html: string;
   style: string;
   title: string;
+  root?: Document | ShadowRoot;
+  closable?: boolean;
 }
 
-export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }: this_interface) => {
+export default ({
+  callback,
+  id = 'modal' + Date.now(),
+  html,
+  style,
+  title = '',
+  root = document,
+  closable = true,
+}: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
 
   const modal = document.createElement('div');
   setTimeout(() => {
-    document
+    root
       .getElementById(id)
       .querySelector('.close')
       .addEventListener('click', (e) => {
         modal.remove();
       });
-    document.querySelector('.modal_cover').addEventListener('click', (e) => {
-      e.target['classList'].contains('modal_cover') && modal.remove();
+    root.querySelector('.modal_cover').addEventListener('click', (e) => {
+      e.target['classList'].contains('modal_cover') && closable && modal.remove();
     });
   }, 0);
 
@@ -82,7 +92,7 @@ export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }
                 <div class="modal_title flex">
                     ${title}
                 </div>
-                <div class="modal_close">
+                <div class="modal_close" ${closable ? '' : 'hidden'}>
                     <div class="close">X</div>
                 </div>
             </div>
@@ -94,7 +104,7 @@ export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }
     `;
   if (callback) {
     setTimeout(() => {
-      document.getElementById(id).addEventListener('change', (e) => {
+      root.getElementById(id).addEventListener('change', (e) => {
         ////debugger;
         callback(e, 'url');
 
@@ -107,9 +117,9 @@ export default ({ callback, id = 'modal' + Date.now(), html, style, title = '' }
   modal.className = 'modal_container';
   dom_diffing('', modal_html, 'div', modal);
   // modal.innerHTML = modal_html;
-  const body: any = document.body;
+  const body = root?.querySelector('body') ?? root;
   body.appendChild(modal);
   return () => {
     modal.remove();
-  }
+  };
 };
