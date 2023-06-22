@@ -25,7 +25,14 @@ import morphdom from 'morphdom';
 
 // declare const browser: any;
 
-export default (id, html, tag = 'div', el: Element | HTMLElement | null = null, use_dom_diff = false) => {
+export default (
+  id,
+  html,
+  tag = 'div',
+  el: Element | HTMLElement | null = null,
+  use_dom_diff = false,
+  root: Document | ShadowRoot = document,
+) => {
   // let DiffDOM: any = await import('./dom_differ');
   // const diff = DiffDOM();
   // import { DiffDOM } from './diff-dom/dist/index.js';
@@ -43,7 +50,7 @@ export default (id, html, tag = 'div', el: Element | HTMLElement | null = null, 
    *with childrenOnly I don't need
    * , classes, styles
    */
-  const current_el = el ? el : document.getElementById(id);
+  const current_el = el ? el : root.getElementById(id);
   if (current_el && use_dom_diff && typeof window !== 'undefined') {
     // const dd = new diff.DiffDOM();
     // debugger;

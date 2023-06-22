@@ -18,6 +18,7 @@ export default async (
   data_name: string = 'name',
   data_name_2?: string,
   is_disabled?: boolean,
+  root: Document | ShadowRoot = document
 ) => {
   // const url = "TestGen/GetRoles";
   const data = await dl()
@@ -54,6 +55,7 @@ export default async (
       'div',
       undefined,
       true,
+      root
     );
   } else {
   }
