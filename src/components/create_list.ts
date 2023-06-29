@@ -32,7 +32,7 @@ export default (
       if (dataset.xid) {
         list = list.filter((item) => item.id !== dataset.id);
         callback(e, id, list);
-        dom_diffing(id, create_list(list), 'div', root.querySelector(`#${id}`)?.querySelector('#list_container'));
+        dom_diffing(id, create_list(list), 'div', root.querySelector(`#${id}`)?.querySelector('#list_container'), undefined, root);
         console.log(e);
       }
     });
