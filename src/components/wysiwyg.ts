@@ -5,6 +5,7 @@ import svg from './svg';
 
 interface feature {
   name: string;
+  html?: string;
   action: (e: any) => void;
 }
 
@@ -18,6 +19,7 @@ export interface this_interface {
   style?: any;
   base_url?: string;
   name_space?: string;
+  root?: Document | ShadowRoot
 }
 
 export default ({
@@ -30,6 +32,7 @@ export default ({
   style,
   base_url = '/resources',
   name_space = '_ttw',
+  root = document
 }: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
@@ -37,17 +40,17 @@ export default ({
   let editor, toolbar, buttons, contentArea, visuellView, htmlView, modal;
   const init = () => {
     // define vars
-    editor = document.querySelector(`#${id}_editor`);
+    editor = root.querySelector(`#${id}_editor`);
     if (editor) {
       toolbar = editor.getElementsByClassName('toolbar')[0];
       buttons = toolbar.querySelectorAll('.btn:not(.has-submenu)');
       contentArea = editor.getElementsByClassName('content-area')[0];
       visuellView = contentArea.getElementsByClassName('visuell-view')[0];
       htmlView = contentArea.getElementsByClassName('html-view')[0];
-      modal = document.getElementsByClassName('modal')[0];
+      modal = root.querySelectorAll('.modal')[0];
 
       // add active tag event
-      document.addEventListener('selectionchange', selectionChange);
+      root.addEventListener('selectionchange', selectionChange);
 
       // add toolbar button actions
       for (let i = 0; i < buttons.length; i++) {
@@ -71,7 +74,7 @@ export default ({
         });
       }
       callback && start_observer();
-    } else if (document.querySelector('div')) {
+    } else if (root.querySelector('div')) {
       setTimeout(init, 50);
     }
   };
@@ -179,8 +182,8 @@ export default ({
         }
         return ranges;
       }
-    } else if (document['selection'] && document['selection'].createRange) {
-      return document['selection'].createRange();
+    } else if (root['selection'] && root['selection'].createRange) {
+      return root['selection'].createRange();
     }
     return null;
   }
@@ -194,7 +197,7 @@ export default ({
         for (var i = 0, len = savedSel.length; i < len; ++i) {
           sel.addRange(savedSel[i]);
         }
-      } else if (document['selection'] && savedSel.select) {
+      } else if (root['selection'] && savedSel.select) {
         savedSel.select();
       }
     }
@@ -227,14 +230,14 @@ export default ({
 
     // active by tag names
     let tagName = elem?.tagName?.toLowerCase();
-    toolbarButton = document.querySelectorAll(`.toolbar .btn[data-tag-name="${tagName}"]`)[0];
+    toolbarButton = root.querySelectorAll(`.toolbar .btn[data-tag-name="${tagName}"]`)[0];
     if (toolbarButton) {
       toolbarButton.classList.add('active');
     }
 
     // active by text-align
     let textAlign = elem && elem['style']?.textAlign;
-    toolbarButton = document.querySelectorAll(`.toolbar .btn[data-style="textAlign:${textAlign}"]`)[0];
+    toolbarButton = root.querySelectorAll(`.toolbar .btn[data-style="textAlign:${textAlign}"]`)[0];
     if (toolbarButton) {
       toolbarButton.classList.add('active');
     }
@@ -243,7 +246,7 @@ export default ({
   }
 
   const start_observer = () => {
-    const content = document.getElementById(id);
+    const content = root.getElementById(id);
     const blur_call = () => {
       callback(content, content.innerHTML);
     };
@@ -253,7 +256,7 @@ export default ({
 
     let debouncer = setTimeout(() => {}, 0);
     const observer = new MutationObserver((e) => {
-      if (!content.contains(document.activeElement)) {
+      if (!content.contains(root.activeElement)) {
         clearTimeout(debouncer);
         debouncer = setTimeout(() => {
           callback(content, content.innerHTML);
@@ -322,7 +325,7 @@ export default ({
             width: 20px;
             padding: 0 10px;
           }
-          .editor .toolbar .line .box .btn.has-submenu::after {
+          .editor .toolbar .line .box .btn.has-submenu.justify::after {
             content: "";
             width: 6px;
             height: 6px;
@@ -344,13 +347,20 @@ export default ({
             border-top: none;
           }
           .editor .toolbar .line .box .btn.has-submenu .submenu .btn {
-            width: 39px;
+            width: 100%;
+            min-width: 39px
           }
           .editor .toolbar .line .box .btn.has-submenu .submenu:hover {
             display: block;
           }
+          .editor .toolbar .line .box .btn.has-submenu .submenu.layout:hover {
+            display: block;
+          }
           .editor .toolbar .line .box .btn.has-submenu:hover .submenu {
             display: block;
+          }
+          .editor .toolbar .line .box .btn.has-submenu:hover .submenu.layout {
+            display: flex;
           }
           .editor .content-area {
             padding: 5px 2px;
@@ -446,7 +456,7 @@ export default ({
     custom_features.forEach((feature) => {
       const name = feature.name.replaceAll(' ', '_');
       window[name_space][name + '_button'] = feature.action;
-      html += /*html*/ `
+      html += feature.html || /*html*/ `
         <div class="box">
           <button class="btn" onclick="${name_space}.${name + '_button'}(event)" data-action="${feature.name}" >
             ${feature.name}
@@ -519,7 +529,7 @@ export default ({
         <div class="box">
             <span ${hidden_features.includes('justify') ? 'hidden' : ''} class="btn icon has-submenu">
             <img src="/resources/wysiwyg/left.png" title="Justify">
-            <div class="submenu">
+            <div class="submenu justify">
                 <span class="btn icon" data-action="justifyLeft" data-style="textAlign:left" title="Justify left">
                 <img src="/resources/wysiwyg/left.png" title="Justify left">  
                 </span>
