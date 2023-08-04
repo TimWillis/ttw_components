@@ -26,6 +26,7 @@ import * as fb_file_uploader_mod from './components/fb_file_uploader';
 
 // import * as layout_mod from './components/layout/layout';
 import * as dom_diffing_mod from './utilities/dom_diffing';
+import * as error_handler_mod from './utilities/error_handler';
 import * as object_to_array_mod from './utilities/object_to_array';
 import * as add_event_listener_mod from './utilities/add_event_listener';
 import * as anonymous_user_mod from './utilities/anonymous_user';
@@ -53,6 +54,7 @@ import * as obj_to_snake_case_mod from './utilities/obj_to_snake_case';
 import * as obj_to_camel_case_mod from './utilities/obj_to_camel_case';
 import * as date_time_formatter_mod from './utilities/date_time_formatter';
 import * as remove_class_from_all_mod from './utilities/remove_class_from_all';
+import * as export_to_excel_mod from './utilities/export_to_excel';
 import * as flex_mod from './css/flex';
 import * as animations_mod from './css/animations';
 
@@ -70,6 +72,7 @@ export const auto_complete_native = auto_complete_native_mod.default;
 export const modal = modal_mod.default;
 export const modal_alert = modal_alert_mod.default;
 export const dom_diffing = dom_diffing_mod.default;
+export const error_handler = error_handler_mod.default;
 export const add_event_listener = add_event_listener_mod.default;
 export const input_with_label = input_with_label_mod.default;
 export const table = table_mod.default;
@@ -111,6 +114,7 @@ export const obj_to_snake_case = obj_to_snake_case_mod.default;
 export const obj_to_camel_case = obj_to_camel_case_mod.default;
 export const date_time_formatter = date_time_formatter_mod.default;
 export const remove_class_from_all = remove_class_from_all_mod.default;
+export const export_to_excel = export_to_excel_mod.default;
 export const flex = flex_mod.default;
 export const animations = animations_mod.default;
 

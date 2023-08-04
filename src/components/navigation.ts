@@ -1,5 +1,5 @@
 export default function (callback, base_route = '/popup/') {
-  let last_route = '';
+  let last_route = sessionStorage.getItem('ttw_last_route') || '';
   const router = function (event?: any) {
     // const user_json = sessionStorage.getItem("user");
     // if (user_json) {
@@ -35,6 +35,7 @@ export default function (callback, base_route = '/popup/') {
       // ttw.last_page !== page && change_page(page);
       event?.preventDefault();
       last_route = route;
+      sessionStorage.setItem('ttw_last_route', route);
       const route_split = route.split('/');
       callback(route_split[0], route_split[1] || undefined);
     }

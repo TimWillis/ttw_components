@@ -42,7 +42,7 @@ export default ({
     
     `;
 
-  modal({
+  const my_modal = modal({
     html: modal_html,
     callback: callback,
     title: title,
@@ -57,4 +57,5 @@ export default ({
       callback(e, 'no');
     });
   }, 0);
+  return my_modal;
 };

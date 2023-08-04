@@ -427,7 +427,7 @@ export default ({
             color: #FFF;
             padding: 0.5rem 1.2rem;
             cursor: pointer;
-          }
+          } 
           .modal .modal-bg {
             position: fixed;
             background-color: rgba(0, 0, 0, 0.3);

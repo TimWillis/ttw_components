@@ -9,4 +9,8 @@ export default {
     (this.events[event] = this.events[event] || []).push(cb);
     return () => (this.events[event] = this.events[event].filter((i: any) => i !== cb));
   },
+  remove(event: any, cb: any) {
+    if (!this.events[event]) return console.log('event does not exist');
+    this.events[event] = this.events[event].filter((i: any) => i.name !== cb.name);
+  },
 };
