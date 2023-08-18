@@ -105,8 +105,9 @@ const error_handler = (api_url: string, application: string) => {
   set_global_handlers();
 };
 export default error_handler;
-
-if (typeof window.components === 'undefined') {
-  window.components = {};
+if (typeof window !== 'undefined') {
+  if (typeof window.components === 'undefined') {
+    window.components = {};
+  }
+  window.components.error_handler = error_handler;
 }
-window.components.error_handler = error_handler;
