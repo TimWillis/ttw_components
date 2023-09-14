@@ -17,7 +17,8 @@ export default function (
 
     if (route !== last_route && !route.includes('undefined')) {
       route = route === '' ? logged_in_default_page : route;
-      let page = base_route + route + location.search;
+      let page = (base_route + route + location.search).replace(/\/\/+/g, '/').replace(/(http:|https:)\/\//, '$1//');
+
       const stateObj = { page: page };
       history.replaceState(stateObj, page, page);
       event?.preventDefault();

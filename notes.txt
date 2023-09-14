@@ -7,7 +7,9 @@ What about when you import xyz from mod@xyz - how can I do this?
 
 note 5-30-22
 no need to push to github and npm, I can just do npm run build then do
-$ npm install --save ../ttw_components
+
+npm install --save ../ttw_components
+
 with the correct relative path from the referencing project
 
 

@@ -1,4 +1,4 @@
-import { Workbook } from 'exceljs';
+// import { Workbook } from 'exceljs';
 import html_to_excel_cell from './html_to_excel_cell';
 import flatten_object, { FlatObject } from './flatten_object';
 
@@ -13,8 +13,11 @@ const object_to_string = (obj: object): string => {
 };
 
 const export_to_excel = async (jsonString: string, filename: string): Promise<void> => {
+  const Workbook = await import('exceljs').then(({ Workbook }) => {
+    return Workbook;
+  });
   let data: ExcelData[] = JSON.parse(jsonString);
-  
+
   // Flatten each object in the data array
   data = data.map(flatten_object);
 
@@ -36,7 +39,7 @@ const export_to_excel = async (jsonString: string, filename: string): Promise<vo
       if (Array.isArray(value)) {
         // Convert arrays into comma-separated lists without quotes
         // If the array value is an object, stringify it
-        value = value.map(item => typeof item === 'object' ? object_to_string(item) : item).join(", ");
+        value = value.map((item) => (typeof item === 'object' ? object_to_string(item) : item)).join(', ');
       }
 
       if (typeof value === 'string' && value.includes('<')) {
@@ -54,7 +57,7 @@ const export_to_excel = async (jsonString: string, filename: string): Promise<vo
   // Write to Blob
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
+
   // Download
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

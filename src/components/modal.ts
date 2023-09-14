@@ -10,6 +10,7 @@ export interface this_interface {
   title: string;
   root?: Document | ShadowRoot;
   closable?: boolean;
+  moveable?: boolean;
 }
 
 export default ({
@@ -20,12 +21,59 @@ export default ({
   title = '',
   root = document,
   closable = true,
+  moveable = false,
 }: this_interface) => {
-  // const new_id = "select" + Date.now()
-  // id = id ? id : new_id;
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  const move_status = (top?: string, left?: string) => {
+    const modal_el: any = root.querySelector(`#${id} .modal`);
+    if (!modal_el) return; // Exit if the element is not found
 
-  const modal = document.createElement('div');
+    // Calculate new top and left
+    const newTop = top ? parseInt(top) : modal_el.offsetTop - pos2;
+    const newLeft = left ? parseInt(left) : modal_el.offsetLeft - pos1;
+
+    // Get the element dimensions
+    const statusWidth = modal_el.offsetWidth;
+    const statusHeight = modal_el.offsetHeight;
+
+    // Get the viewport dimensions
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Boundary checks
+    const finalTop = Math.min(Math.max(newTop, 0), viewportHeight - statusHeight);
+    const finalLeft = Math.min(Math.max(newLeft, 0), viewportWidth - statusWidth);
+
+    // Set the element's new position
+    modal_el.style.top = `${finalTop > 0 ? finalTop : 0}px`;
+    modal_el.style.left = `${finalLeft > 0 ? finalLeft : 0}px`;
+
+    modal_el.style.position = 'fixed'; // Assuming you want to keep it fixed
+    modal_el.style.bottom = '';
+    modal_el.style.right = '';
+  };
+  function element_drag(e: any) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    move_status();
+  }
+
+  function close_drag_element(e: MouseEvent) {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
   setTimeout(() => {
+    const model_el = root.getElementById(id);
+    moveable && model_el && ((model_el.querySelector('.modal_header') as HTMLElement)['onmousedown'] = drag_mouse_down);
     root
       .getElementById(id)
       .querySelector('.close')
@@ -37,10 +85,22 @@ export default ({
     });
   }, 0);
 
+  function drag_mouse_down(e: any) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = close_drag_element;
+    // call a function whenever the cursor moves:
+    document.onmousemove = element_drag;
+  }
+
+  const modal = document.createElement('div');
+
   const css = /*css*/ `<style>
         #${id}{
             
-        }
         .modal_header{
             width: calc(100% - 20px);
             font-size: 14px;
@@ -48,6 +108,7 @@ export default ({
         }
         .modal_title{
             width: calc(100% - 20px);
+            cursor: ${moveable ? 'move' : 'default'};
         }
         .modal_close{
             width: 0;
@@ -72,7 +133,7 @@ export default ({
             left: 0;
         }
         .modal_cover{
-            position: absolute;
+            position: fixed;
             top:0;
             left: 0;
             width: 100vw;
@@ -83,6 +144,7 @@ export default ({
             box-shadow: var(--base_box_shadow_1);
             background-color: var(--main-bg-color);
         }
+      }
     </style>`;
   const modal_html = /*html*/ `
     ${css}

@@ -1,7 +1,6 @@
 import header from './header/header';
 import page_content from './content/content';
 import footer from './footer/footer';
-// import navigation from "../../utilities/navigation";
 declare global {
   var components: any;
   var is_node: any;

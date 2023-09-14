@@ -8,10 +8,12 @@ export default (
   callback?: (isActive: boolean) => void,
   root: ShadowRoot | Document = document,
   is_active: boolean = false,
+  id?: string,
 ): string => {
   //   let is_active = false;
-  const container_id = `toggle-container-${unique_id(6)}`;
-  const button_id = `toggle-button-${unique_id(6)}`;
+  id = id || unique_id(6);
+  const container_id = `toggle_container_${id}`;
+  const button_id = `toggle_button_${id}`;
   const container = document.createElement('div');
   container.id = container_id;
 

@@ -1,4 +1,4 @@
-export default function (callback, base_route = '/popup/') {
+export default function (callback, base_route = '/popup/', force_sign_in = false) {
   let last_route = sessionStorage.getItem('ttw_last_route') || '';
   const router = function (event?: any) {
     // const user_json = sessionStorage.getItem("user");
@@ -14,8 +14,10 @@ export default function (callback, base_route = '/popup/') {
     const location_split = location.pathname.split('/');
     let route = location.hash ? location.hash.replace('#', '') : location_split[2];
     route = !location.hash && route && location_split[3] ? route + '/' + location_split[3] || '' : route || '';
-    const user_json = sessionStorage.getItem('user');
-    route = user_json ? route : 'sign_in';
+    if (force_sign_in) {
+      const user_json = sessionStorage.getItem('user');
+      route = user_json ? route : 'sign_in';
+    }
     if (route !== last_route) {
       // page = "popup.html?route=" + page;
       route = route === '' ? 'scripts' : route;
