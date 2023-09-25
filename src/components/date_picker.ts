@@ -1,20 +1,28 @@
 // import { Datepicker } from './libs/date_picker/main.js'; /*https://github.com/mymth/vanillajs-datepicker*/
-import flatpickr from 'flatpickr';
-import svg from './svg';
-import date_picker_style from '../css/date_picker_style';
+// import flatpickr from 'flatpickr';
+// import svg from './svg';
+// import date_picker_style from '../css/date_picker_style';
 export interface IDatePicker {
   html: () => string;
   init: () => void;
+  style: string;
 }
 
-const create = (
+const create = async (
   id: string,
   date: string = '',
   callback?: (e: Event, value: string) => void,
   should_init: boolean = true,
   is_range: boolean = false,
-): IDatePicker => {
+): Promise<IDatePicker> => {
+  const date_picker_style_mod = await import('../css/date_picker_style');
+  const date_picker_style = date_picker_style_mod.default;
+  const svg_mod = await import('./svg');
+  const svg = svg_mod.default;
   const init = async () => {
+    const flatpickr_mod = await import('flatpickr');
+    const flatpickr = flatpickr_mod.default;
+
     const elem = document.getElementById(`date_${id}`);
     if (elem) {
       // const { Datepicker } = await import('vanillajs-datepicker');
@@ -75,7 +83,7 @@ const create = (
             <input   autocomplete="off" style='width: 100%;' type="text" placeholder="Start Date" id="date_${id}"/>
         </div>
     </div> `;
-  return { html, init };
+  const style = await date_picker_style();
+  return { html, init, style };
 };
-const style = date_picker_style();
-export default { create, style };
+export default { create };

@@ -1,4 +1,5 @@
-import { unique_id } from './../index';
+// import { unique_id } from 'hlinc_components';
+import unique_id from './unique_id';
 export default (string, len, is_expandable?: boolean) => {
   if (is_expandable) {
     const id = unique_id(5);

@@ -1,5 +1,3 @@
-import * as idb_keyvalue from './idb_keyvalue';
-
 export type get_type = 'idb' | 'post' | 'rest' | 'both';
 
 export interface fb_i {
@@ -13,7 +11,10 @@ export interface fb_i {
   post_data?: any;
 }
 
-export default (root_path = '', token?, re_auth?, idb_version = '1') => {
+export default async (root_path = '', token?, re_auth?, idb_version = '1') => {
+  // import * as idb_keyvalue from './idb_keyvalue';
+  const idb_keyvalue = await import('./idb_keyvalue');
+  // const {idb_keyvalue} = await import('ttw_components')
   idb_version = idb_version + '/';
   const one_day = 24 * 60 * 60 * 1000;
   const headers = new Headers();

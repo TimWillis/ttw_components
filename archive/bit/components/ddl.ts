@@ -1,4 +1,4 @@
-import shorten_string from '../utilities/shorten_string';
+
 
 export interface ddl_interface {
   options: any[];
@@ -8,13 +8,15 @@ export interface ddl_interface {
   is_disabled?: boolean;
 }
 
-export default ({
+export default async ({
   options,
   callback,
   id = 'select' + Date.now(),
   selected_value,
   is_disabled = false,
 }: ddl_interface) => {
+  const shorten_string_mod = await import('../utilities/shorten_string');
+  const shorten_string = shorten_string_mod.default;
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
   const css = `<style>

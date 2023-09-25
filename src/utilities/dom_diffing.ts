@@ -1,6 +1,7 @@
-// import { DiffDOM } from '/utilities/diff-dom/dist/index.js';
-// import DiffDOM from './dom_differ';
-import morphdom from 'morphdom';
+// import { morphdom } from 'morphdom';
+// // import { DiffDOM } from '/utilities/diff-dom/dist/index.js';
+// // import DiffDOM from './dom_differ';
+// import morphdom from 'morphdom';
 // const morphdom = require("morphdom");
 
 // export default (id, html, tag = "div", el = null, use_dom_diff = false) => {
@@ -25,7 +26,7 @@ import morphdom from 'morphdom';
 
 // declare const browser: any;
 
-export default (
+export default async (
   id,
   html,
   tag = 'div',
@@ -33,6 +34,8 @@ export default (
   use_dom_diff = false,
   root: Document | ShadowRoot = document,
 ) => {
+  const morphdom_mod = await import('morphdom');
+  const morphdom = morphdom_mod.default;
   // let DiffDOM: any = await import('./dom_differ');
   // const diff = DiffDOM();
   // import { DiffDOM } from './diff-dom/dist/index.js';

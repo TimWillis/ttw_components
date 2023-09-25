@@ -1,5 +1,4 @@
-// import { dom_diffing } from './../bit/index';
-import dom_diffing from '../utilities/dom_diffing';
+// import dom_diffing from '../utilities/dom_diffing';
 // import dom_diffing from '../utilities/dom_diffing';
 
 export interface this_interface {
@@ -13,7 +12,7 @@ export interface this_interface {
   moveable?: boolean;
 }
 
-export default ({
+export default async ({
   callback,
   id = 'modal' + Date.now(),
   html,
@@ -177,6 +176,8 @@ export default ({
 
   modal.id = id;
   modal.className = 'modal_container';
+  const dom_diffing_mod = await import('../utilities/dom_diffing');
+  const dom_diffing = dom_diffing_mod.default;
   dom_diffing('', modal_html, 'div', modal);
   // modal.innerHTML = modal_html;
   const body = root?.querySelector('body') ?? root;

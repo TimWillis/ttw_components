@@ -1,6 +1,3 @@
-// import shorten_string from '../utilities/shorten_string';
-import unique_id from '../utilities/unique_id';
-
 export interface ddl_interface {
   options: any[];
   callback?: (e: any, value: string) => void;
@@ -15,13 +12,14 @@ export interface ddl_interface {
 export default ({
   options,
   callback,
-  id = 'select' + unique_id(6),
+  id = '',
   selected_value,
   is_disabled = false,
   shadow_root,
   name_space = '_ttw',
 }: // shorten_string_length,
 ddl_interface) => {
+  id = id === '' ? 'select_' + Date.now() : id;
   typeof window[name_space] === 'undefined' && (window[name_space] = {});
   selected_value = selected_value ? selected_value.toString() : selected_value;
   const root = shadow_root ? document.getElementById(shadow_root)?.shadowRoot : document;

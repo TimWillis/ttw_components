@@ -1,9 +1,12 @@
+// import { flatpickr } from 'flatpickr';
 // import { DateRangePicker } from './libs/date_picker/main'; /*https://github.com/mymth/vanillajs-datepicker*/
 import svg from './svg';
-import flatpickr from 'flatpickr';
+// import flatpickr from 'flatpickr';
 export default (id: string, value: string) => {
   const [start_date, end_date] = (value && value.split(',')) || ['', ''];
   const init_date_picker = async () => {
+    const flatpickr_mod = await import('flatpickr');
+    const flatpickr = flatpickr_mod.default;
     const elem = document.getElementById(`date_range_${id}`);
     if (elem) {
       // const { DateRangePicker } = await import('vanillajs-datepicker');

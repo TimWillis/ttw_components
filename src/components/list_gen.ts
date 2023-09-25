@@ -1,5 +1,4 @@
-// import { dom_diffing } from './../bit/index';
-// import dom_diffing from '../utilities/dom_diffing';
+
 
 export interface list_gen_interface {
   list: Array<any>;
