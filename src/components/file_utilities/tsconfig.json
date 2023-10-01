@@ -1,0 +1,29 @@
+
+  {
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "lib": [
+        "dom",
+        "dom.iterable",
+        "esnext"
+      ],      
+      "target": "ESNext",
+      "module": "CommonJS",
+      "outDir": "../../dist/file_utilities/",
+      "moduleResolution": "node",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "baseUrl": ".",
+      "paths": {
+        "@types": ["../types/*"]
+    }
+    },
+    "files" : [
+        "../types/types.d.ts"
+    ],
+    "include": ["folder_copy.ts", "img_inliner.ts"],
+    "exclude": ["**/node_modules/"]
+  }
+
+  
