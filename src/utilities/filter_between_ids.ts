@@ -1,4 +1,4 @@
-export default (list, ids) => {
+export default (list: string | any[], ids: string | any[]) => {
   var filteredList = [];
   var firstIndex = 0;
   var lastIndex = 0;

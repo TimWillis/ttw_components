@@ -1,21 +1,21 @@
-export default (el, callback) => {
+export default (el: { addEventListener: (arg0: string, arg1: { (evt: any): void; (evt: any): void; }, arg2: boolean) => void; }, callback: (arg0: string) => void) => {
   el.addEventListener('touchstart', handleTouchStart, false);
   el.addEventListener('touchmove', handleTouchMove, false);
 
   let xDown = null;
   let yDown = null;
 
-  function getTouches(evt) {
+  function getTouches(evt: { touches: any; }) {
     return evt.touches;
   }
 
-  function handleTouchStart(evt) {
+  function handleTouchStart(evt: any) {
     const firstTouch = getTouches(evt)[0];
     xDown = firstTouch.clientX;
     yDown = firstTouch.clientY;
   }
 
-  function handleTouchMove(evt) {
+  function handleTouchMove(evt: { touches: { clientY: any, clientX: any }[]; }) {
     if (!xDown || !yDown) {
       return;
     }

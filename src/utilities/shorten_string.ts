@@ -1,6 +1,8 @@
 // import { unique_id } from 'hlinc_components';
-import unique_id from './unique_id';
-export default (string, len, is_expandable?: boolean) => {
+// import unique_id from './unique_id';
+export default async (string, len, is_expandable?: boolean) => {
+  const unique_id_mod = await import('./unique_id');
+  const unique_id = unique_id_mod.default;
   if (is_expandable) {
     const id = unique_id(5);
     console.log(id);

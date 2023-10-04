@@ -123,9 +123,9 @@ const table = (table: table_interface) => {
         <div class="table layout vertical">
             <div class="table_headers layout horizontal">
                 ${table.headers
-                  .map((header) => {
+                  .map((header, index) => {
                     return `
-                        <div class="table_header " style="${header.style}">
+                        <div class="table_header "  data-col_index="${index}" style="${header.style}">
                             ${header.value}
                         </div>
                     `;
