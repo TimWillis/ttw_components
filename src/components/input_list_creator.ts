@@ -1,4 +1,4 @@
-import input_with_label from './input_with_label';
+
 import dom_diffing from '../utilities/dom_diffing';
 import unique_id from '../utilities/unique_id';
 import create_list from './create_list';

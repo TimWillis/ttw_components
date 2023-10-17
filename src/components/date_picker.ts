@@ -20,11 +20,11 @@ const create = async (
   const svg_mod = await import('./svg');
   const svg = svg_mod.default;
   const init = async () => {
-    const flatpickr_mod = await import('flatpickr');
-    const flatpickr = flatpickr_mod.default;
 
     const elem = document.getElementById(`date_${id}`);
     if (elem) {
+      const flatpickr_mod = await import('flatpickr');
+      const flatpickr = flatpickr_mod.default;
       // const { Datepicker } = await import('vanillajs-datepicker');
       /* NOTE: This is a hack to get the date picker to show the svg date icon*/
       const svg_container_el = document.getElementById(`svg_container_${id}`);
