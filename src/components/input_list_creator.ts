@@ -1,4 +1,3 @@
-
 import dom_diffing from '../utilities/dom_diffing';
 import unique_id from '../utilities/unique_id';
 import create_list from './create_list';
@@ -37,7 +36,10 @@ export default ({
 }: this_interface) => {
   const root = shadow_root ? document.getElementById(shadow_root)?.shadowRoot : document;
   if (callback) {
-    setTimeout(() => {
+    const init = () => {
+      if (!root.querySelector(`#${id}`)) {
+        setTimeout(init, 100);
+      }
       root.querySelector(`#${id} input[type=button]`)?.addEventListener('click', (e) => {
         e.preventDefault();
         const ilc_value_el = <any>root.querySelector(`#${id}`)?.querySelector(`#${id}_ilc_value`);
@@ -72,27 +74,30 @@ export default ({
 
         console.log(e);
       });
-      // const list_callback = (e: any, id: string, list: any) => {
+    };
 
-      //   callback(e, id, list);
-      // }
-      // root.querySelector(`#${id}`)?.addEventListener('click', (e) => {
-      //   ////debugger;
-      //   const dataset: any = e.target ? e.target['dataset'] : {};
-      //   if (dataset.id) {
-      //     list = list.filter((item) => item.id !== dataset.id);
+    init();
+    // const list_callback = (e: any, id: string, list: any) => {
 
-      //     callback(e, id, list);
-      //     dom_diffing(
-      //       '',
-      //       create_list(list, type, true, id + '_list', grow_wider),
-      //       'div',
-      //       root.querySelector(`#${id}`)?.querySelector('#list_container'),
-      //     );
-      //     console.log(e);
-      //   }
-      // });
-    }, 0);
+    //   callback(e, id, list);
+    // }
+    // root.querySelector(`#${id}`)?.addEventListener('click', (e) => {
+    //   ////debugger;
+    //   const dataset: any = e.target ? e.target['dataset'] : {};
+    //   if (dataset.id) {
+    //     list = list.filter((item) => item.id !== dataset.id);
+
+    //     callback(e, id, list);
+    //     dom_diffing(
+    //       '',
+    //       create_list(list, type, true, id + '_list', grow_wider),
+    //       'div',
+    //       root.querySelector(`#${id}`)?.querySelector('#list_container'),
+    //     );
+    //     console.log(e);
+    //   }
+    // });
+    // }, 0);
   }
 
   const css = /*css*/ `<style>
