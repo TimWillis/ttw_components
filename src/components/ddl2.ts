@@ -6,6 +6,7 @@ export interface ddl_interface {
   is_disabled?: boolean;
   shadow_root?: string;
   name_space?: string;
+  place_holder?: string;
   // shorten_string_length?: number;
 }
 
@@ -17,6 +18,7 @@ export default ({
   is_disabled = false,
   shadow_root,
   name_space = '_ttw',
+  place_holder = 'Select',
 }: // shorten_string_length,
 ddl_interface) => {
   id = id === '' ? 'select_' + Date.now() : id;
@@ -35,15 +37,16 @@ ddl_interface) => {
         .input_like{
           width: 100%;
           height: 40px;
-          border: 1px solid #ccc!important;
+          border: 1px solid #ccc;
           border-radius: 4px;
-          padding: 4px!important;
+          padding: 4px;
           box-sizing: border-box;
         }
         #options_${id}{
           transition: all 0.3s ease;
           transform-origin: top;
           position: absolute;
+          z-index: 10;
         }
         
         #options_${id} > div{
@@ -54,7 +57,7 @@ ddl_interface) => {
         #options_${id} .option{
           width: 100%;
           height: 40px;
-          padding: 4px!important;
+          padding: 4px;
           box-sizing: border-box;
           cursor: pointer;
         }
@@ -119,7 +122,7 @@ ddl_interface) => {
       is_disabled ? 'disabled' : ''
     }>
       <div id="value_${id}">
-        ${(selected_value && selected_value.toString().replaceAll("'", ' ').replaceAll('_', ' ')) || ''}
+        ${(selected_value && selected_value.toString().replaceAll("'", ' ').replaceAll('_', ' ')) || place_holder}
       </div>
       <div class='flex'></div>
       <div class='hat'>^</div>
