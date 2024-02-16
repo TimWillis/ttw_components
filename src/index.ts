@@ -55,7 +55,7 @@ import * as obj_to_snake_case_mod from './utilities/obj_to_snake_case';
 import * as obj_to_camel_case_mod from './utilities/obj_to_camel_case';
 import * as date_time_formatter_mod from './utilities/date_time_formatter';
 import * as remove_class_from_all_mod from './utilities/remove_class_from_all';
-import * as export_to_excel_mod from './utilities/export_to_excel';
+// import * as export_to_excel_mod from './utilities/export_to_excel';
 import * as flex_mod from './css/flex';
 import * as animations_mod from './css/animations';
 
@@ -116,7 +116,7 @@ export const obj_to_snake_case = obj_to_snake_case_mod.default;
 export const obj_to_camel_case = obj_to_camel_case_mod.default;
 export const date_time_formatter = date_time_formatter_mod.default;
 export const remove_class_from_all = remove_class_from_all_mod.default;
-export const export_to_excel = export_to_excel_mod.default;
+// export const export_to_excel = export_to_excel_mod.default;
 export const flex = flex_mod.default;
 export const animations = animations_mod.default;
 

@@ -12,6 +12,7 @@ export interface this_interface {
   placeholder?: string;
   select_only?: boolean;
   is_disabled?: boolean;
+  namespace?: string;
 }
 
 export default ({
@@ -22,6 +23,7 @@ export default ({
   placeholder = 'Select Value',
   select_only = false,
   is_disabled = false,
+  namespace: name_space = '_ttw',
 }: this_interface) => {
   // const new_id = "select" + Date.now()
   // id = id ? id : new_id;
@@ -69,35 +71,59 @@ export default ({
         : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
     });
   };
-  setTimeout(() => {
-    const input_el = document.getElementById(id) as HTMLInputElement | null;
-    input_el?.addEventListener('keyup', (e) => {
-      callback
-        ? callback(e, create_data_list, true)
-        : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
-    });
-    //create_data_list(list);
-    input_el?.addEventListener('focus', (e) => {
-      callback
-        ? callback(e, create_data_list, true)
-        : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
-    });
-    input_el?.addEventListener('blur', (e) => {
-      setTimeout(() => {
-        if (select_only) {
-          input_el.value = current_list.find((item) => item.value === input_el.value) ? input_el.value : '';
-        }
-        create_data_list([]);
-      }, 300);
-    });
-  }, 0);
+  /*if window namespace does not exist create it*/
+  if (typeof window[name_space] === 'undefined') {
+    window[name_space] = {};
+    window[name_space][id] = { focus: null, blur: null, keyup: null };
+  } else if (typeof window[name_space][id] === 'undefined') {
+    window[name_space][id] = { focus: null, blur: null, keyup: null };
+  }
+
+  window[name_space][id].focus = (e) => {
+    callback
+      ? callback(e, create_data_list, true)
+      : create_data_list(list.filter((item) => item.value.includes(e.target.value)));
+  };
+  window[name_space][id].blur = (e) => {
+    setTimeout(() => {
+      if (select_only) {
+        e.target.value = current_list.find((item) => item.value === e.target.value) ? e.target.value : '';
+      }
+      create_data_list([]);
+    }, 300);
+  };
+  window[name_space][id].keyup = (e) => {
+    callback
+      ? callback(e, create_data_list, true)
+      : create_data_list(list.filter((item) => item.value.includes(e.target.value)));
+  };
+  // setTimeout(() => {
+
+  // const input_el = document.getElementById(id) as HTMLInputElement | null;
+  // input_el?.addEventListener('keyup', (e) => {
+  //   callback
+  //     ? callback(e, create_data_list, true)
+  //     : create_data_list(list.filter((item) => item.value.includes(input_el.value)));
+  // });
+  // //create_data_list(list);
+  // // input_el?.addEventListener('focus',
+  // // input_el?.addEventListener('blur', (e) => {
+  //   setTimeout(() => {
+  //     if (select_only) {
+  //       input_el.value = current_list.find((item) => item.value === input_el.value) ? input_el.value : '';
+  //     }
+  //     create_data_list([]);
+  //   }, 300);
+  // });
+  // }, 0);
   return /*html*/ `
     ${css}
     <div class='layout vertical' id='${id}_container'> 
         <div class='list_container layout vertical'>
           <input type='text' ${
             is_disabled ? 'disabled' : ''
-          } value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off"/>
+          } value="${value}" placeholder="${placeholder}" id="${id}" autocomplete="off" onblur='${name_space}.${id}.blur(event)' onfocus='${name_space}.${id}.focus(event)' 
+          onkeyup='${name_space}.${id}.keyup(event)' />
             <div   style="overflow: visible; height: 0;">
               <div id="${id}_items"  >
               </div> 
