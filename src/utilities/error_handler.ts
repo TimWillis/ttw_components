@@ -97,7 +97,15 @@ const error_handler = (api_url: string, application: string) => {
     let parsed_errors: ErrorInfo[] = stored_errors ? JSON.parse(stored_errors) : [];
 
     parsed_errors.push(error_info);
-    localStorage.setItem('error_logs', JSON.stringify(parsed_errors));
+    /*if parsed_errors.length > 100, remove the oldest errors from array*/
+    if (parsed_errors.length > 100) {
+      parsed_errors = parsed_errors.slice(100);
+    }
+    try {
+      localStorage.setItem('error_logs', JSON.stringify(parsed_errors));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   // Initialize error handler

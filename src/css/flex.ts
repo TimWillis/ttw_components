@@ -426,6 +426,9 @@ export default () => {
             overflow: auto;
         }
 
+        .width_fill{
+            width: 100%;
+        }
         .width_100{
             width: 100px;
         }
