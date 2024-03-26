@@ -11,14 +11,15 @@ export default async (string, len, is_expandable?: boolean) => {
       const dot_dot_dot = e.target;
       if (dot_dot_dot) {
         dot_dot_dot.innerHTML = '';
-        dot_dot_dot.parentElement.innerHTML = string;
+        dot_dot_dot.parentElement.innerHTML = dot_dot_dot.dataset.string;
       }
     };
     return /*html*/ `
         <div class="shorten_string" style="max-width:${len}em;">
           ${
             string.length > len
-              ? string.substring(0, len) + `<span onclick='_ttw.click_dot_dot_dot(event)' id=${id}>...</span>`
+              ? string.substring(0, len) +
+                `<span onclick='_ttw.click_dot_dot_dot(event)' data-string='${string}' id='${id}'>...</span>`
               : string
           }
         </div>
