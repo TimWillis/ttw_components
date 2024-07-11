@@ -13,7 +13,7 @@ export default (
     return l
       ?.map((item) => {
         return `<div data-id="${item.id}" class='list_item layout horizontal type_${type} '>
-        ${is_link ? `<a target="_blank" href="${item.value}">${item.value}</a>` : item.value}
+        ${is_link ? `<a target="_blank" href="${item.value}">${item.name ? item.name : item.value}</a>` : item.value}
         ${type === 'table' ? `<div class='flex'></div>` : ''}
         ${
           callback && item.deletable !== false
@@ -32,7 +32,14 @@ export default (
       if (dataset.xid) {
         list = list.filter((item) => item.id !== dataset.id);
         callback(e, id, list);
-        dom_diffing(id, create_list(list), 'div', root.querySelector(`#${id}`)?.querySelector('#list_container'), undefined, root);
+        dom_diffing(
+          id,
+          create_list(list),
+          'div',
+          root.querySelector(`#${id}`)?.querySelector('#list_container'),
+          undefined,
+          root,
+        );
         console.log(e);
       }
     });
