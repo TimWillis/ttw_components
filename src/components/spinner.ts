@@ -4,12 +4,12 @@ const create_loader = (el, parent, current_el) => {
     // Create a div element
     const div = document.createElement('div');
 
+    /*svgTemplate,  make the circles 50 percent transparent */
     const svgTemplate = `
-  <svg width="100%" height="100%" viewBox="0 0 100 100" style="width: 20%; height: 20%;">
-    <circle cx="50" cy="50" r="45" fill="none" stroke-width="10" stroke="#d3d3d3"></circle>
-    <circle cx="50" cy="50" r="45" fill="none" stroke-width="10" stroke="grey" class="spin-circle"></circle>
-  </svg>
-`;
+    <svg width="100%" height="100%" viewBox="0 0 100 100" style="width: 20%; height: 20%;">
+    <circle cx="50" cy="50" r="45" fill="none" stroke-width="10" stroke="rgba(211, 211, 211, 0.75)"></circle>
+    <circle cx="50" cy="50" r="45" fill="none" stroke-width="10" stroke="rgba(128, 128, 128, 0.75)" class="spin-circle"></circle>
+    </svg>`;
 
     div.innerHTML = svgTemplate;
 
@@ -17,6 +17,8 @@ const create_loader = (el, parent, current_el) => {
     div.setAttribute('id', 'l_v_canvas_loader');
     div.classList.add('layout', 'vertical', 'center-center', 'fit', 'loading', 'fade_in');
     div.style.zIndex = (parseInt(current_el.style.zIndex) + 1).toString();
+    /* make the div have a transparent grey background */
+    div.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     // Append the div to the parent element
     parent.appendChild(div);
 
