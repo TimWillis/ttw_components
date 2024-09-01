@@ -9,6 +9,32 @@ export default (
   root: Document | ShadowRoot = document,
   callback?: (e: any, id: string, list: any) => void,
 ) => {
+  !window._ttw && (window._ttw = {});
+  window._ttw.click_close = (e) => {
+    ////debugger;
+    const dataset: any = e.target ? e.target['dataset'] : {};
+    if (dataset.xid) {
+      list = list.filter((item) => {
+        const id = item.id
+          .replaceAll('&lt;', '<')
+          .replaceAll('&gt;', '>')
+          .replaceAll('&amp;', '&')
+          .replaceAll('&quot;', '"')
+          .replaceAll('&apos;', "'");
+        id !== dataset.id;
+      });
+      callback(e, id, list);
+      dom_diffing(
+        id,
+        create_list(list),
+        'div',
+        root.querySelector(`#${id}`)?.querySelector('#list_container'),
+        undefined,
+        root,
+      );
+      console.log(e);
+    }
+  };
   const create_list = (l) => {
     return l
       ?.map((item) => {
@@ -17,7 +43,7 @@ export default (
         ${type === 'table' ? `<div class='flex'></div>` : ''}
         ${
           callback && item.deletable !== false
-            ? `<div class='close' data-id="${item.id}" data-xid="${item.id}">X</div>`
+            ? `<div class='close' onclick='_ttw.click_close(event)' data-id="${item.id}" data-xid="${item.id}">X</div>`
             : ''
         }
     </div>
@@ -26,23 +52,23 @@ export default (
       ?.join('');
   };
   const init = () => {
-    root.querySelector(`#${id}`)?.addEventListener('click', (e) => {
-      ////debugger;
-      const dataset: any = e.target ? e.target['dataset'] : {};
-      if (dataset.xid) {
-        list = list.filter((item) => item.id !== dataset.id);
-        callback(e, id, list);
-        dom_diffing(
-          id,
-          create_list(list),
-          'div',
-          root.querySelector(`#${id}`)?.querySelector('#list_container'),
-          undefined,
-          root,
-        );
-        console.log(e);
-      }
-    });
+    // root.querySelector(`#${id}`)?.addEventListener('click', (e) => {
+    //   ////debugger;
+    //   const dataset: any = e.target ? e.target['dataset'] : {};
+    //   if (dataset.xid) {
+    //     list = list.filter((item) => item.id !== dataset.id);
+    //     callback(e, id, list);
+    //     dom_diffing(
+    //       id,
+    //       create_list(list),
+    //       'div',
+    //       root.querySelector(`#${id}`)?.querySelector('#list_container'),
+    //       undefined,
+    //       root,
+    //     );
+    //     console.log(e);
+    //   }
+    // });
   };
   if (callback) {
     setTimeout(init, 100);
