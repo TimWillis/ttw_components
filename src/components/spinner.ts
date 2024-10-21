@@ -56,14 +56,16 @@ const create_loader = (el, parent, current_el) => {
     return div_old;
   }
 };
+let last_canvas = null;
 const transition_content = (is_out, where_el = 'l_v_canvas', spinner_el = 'l_v_canvas_loader') => {
   const out_in = is_out ? 'out' : 'in';
   const out_in_reverse = is_out ? 'in' : 'out';
   let canvas = document.getElementById(where_el);
   if (!canvas) {
-    canvas = document.querySelector(where_el);
+    canvas = last_canvas; //document.querySelector(last_canvas);
   }
   if (canvas) {
+    last_canvas = canvas;
     const canvas_loader = create_loader(spinner_el, canvas.parentElement, canvas);
 
     canvas.classList.remove('fade_' + out_in_reverse);
