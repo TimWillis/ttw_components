@@ -10,7 +10,7 @@ export default (
   callback?: (e: any, id: string, list: any) => void,
 ) => {
   !window._ttw && (window._ttw = {});
-  window._ttw.click_close = (e) => {
+  window._ttw[`click_close_${id}`] = (e) => {
     ////debugger;
     const dataset: any = e.target ? e.target['dataset'] : {};
     if (dataset.xid) {
@@ -21,7 +21,7 @@ export default (
           .replaceAll('&amp;', '&')
           .replaceAll('&quot;', '"')
           .replaceAll('&apos;', "'");
-        id !== dataset.id;
+        return id !== dataset.id;
       });
       callback(e, id, list);
       dom_diffing(
@@ -43,7 +43,7 @@ export default (
         ${type === 'table' ? `<div class='flex'></div>` : ''}
         ${
           callback && item.deletable !== false
-            ? `<div class='close' onclick='_ttw.click_close(event)' data-id="${item.id}" data-xid="${item.id}">X</div>`
+            ? `<div class='close' onclick='_ttw["click_close_${id}"](event)' data-id="${item.id}" data-xid="${item.id}">X</div>`
             : ''
         }
     </div>

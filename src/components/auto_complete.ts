@@ -6,7 +6,7 @@ import dom_diffing from '../utilities/dom_diffing';
 
 export interface this_interface {
   list: Array<any>;
-  callback?: (e: any, create_data_list, data?: boolean) => void;
+  callback?: (e: any, create_data_list, is_selected?: boolean) => void;
   id?: string;
   value?: string;
   placeholder?: string;
@@ -25,11 +25,7 @@ export default ({
   is_disabled = false,
   namespace: name_space = '_ttw',
 }: this_interface) => {
-  // const new_id = "select" + Date.now()
-  // id = id ? id : new_id;
-  // list = list.map((item) => {
-  //   return { value: item.value ? item.value : item, name: item.name ? item.name : item };
-  // });
+  
 
   const css = /*css*/ `<style>
         #${id}_container{
@@ -81,7 +77,7 @@ export default ({
 
   window[name_space][id].focus = (e) => {
     callback
-      ? callback(e, create_data_list, true)
+      ? callback(e, create_data_list, false)
       : create_data_list(list.filter((item) => item.value.includes(e.target.value)));
   };
   window[name_space][id].blur = (e) => {
@@ -94,7 +90,7 @@ export default ({
   };
   window[name_space][id].keyup = (e) => {
     callback
-      ? callback(e, create_data_list, true)
+      ? callback(e, create_data_list, false)
       : create_data_list(list.filter((item) => item.value.includes(e.target.value)));
   };
   // setTimeout(() => {

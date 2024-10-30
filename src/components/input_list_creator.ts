@@ -35,6 +35,10 @@ export default ({
   allow_duplicates = false,
 }: this_interface) => {
   const root = shadow_root ? document.getElementById(shadow_root)?.shadowRoot : document;
+  const callback_ilc = (e: any, id: string, list2: any) => {
+    list = list2;
+    callback(e, id, list);
+  };
   if (callback) {
     const init = () => {
       if (!root.querySelector(`#${id}`)) {
@@ -57,7 +61,7 @@ export default ({
             callback(e, id, list);
             dom_diffing(
               '',
-              create_list(list, type, true, id + '_list', grow_wider, root, callback),
+              create_list(list, type, true, id + '_list', grow_wider, root, callback_ilc),
               'div',
               root.querySelector(`#${id}`)?.querySelector('#list_container'),
             );
@@ -122,7 +126,7 @@ export default ({
                         id + '_list',
                         grow_wider,
                         root,
-                        callback,
+                        callback_ilc,
                       )}</div>
                         <div class='flex'></div>`
                     : ''
@@ -152,7 +156,7 @@ export default ({
                       id + '_list',
                       grow_wider,
                       root,
-                      callback,
+                      callback_ilc,
                     )}</div>`
                     : ''
                 }
