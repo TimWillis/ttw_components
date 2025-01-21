@@ -10,6 +10,7 @@ export interface this_interface {
   root?: Document | ShadowRoot;
   closable?: boolean;
   moveable?: boolean;
+  remove_overlay?: boolean;
 }
 
 export default async ({
@@ -21,6 +22,7 @@ export default async ({
   root = document,
   closable = true,
   moveable = false,
+  remove_overlay = false,
 }: this_interface) => {
   let pos1 = 0,
     pos2 = 0,
@@ -137,17 +139,18 @@ export default async ({
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(255,255,255, .5);
+            background-color: ${remove_overlay ? 'transparent' : 'rgba(255,255,255, .5)'};
         }
         .modal{
             box-shadow: var(--base_box_shadow_1);
             background-color: var(--main-bg-color);
+            pointer-events: all;
         }
       }
     </style>`;
   const modal_html = /*html*/ `
     ${css}
-    <div class="modal_cover layout vertical center-center"  >
+    <div class="modal_cover layout vertical center-center" style="${remove_overlay ? 'pointer-events: none;' : ''}">
         <div class="modal layout vertical "  style="${style}">
             <div class="modal_header layout horizontal" >
                 <div class="modal_title flex">
