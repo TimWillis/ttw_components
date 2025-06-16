@@ -82,6 +82,7 @@ export const spinner = spinner_mod.default;
 export const svg = svg_mod.default;
 export const close_svg = close_svg_mod.default;
 export const toast = toast_mod.default;
+export type { ToastOptions } from './components/toast';
 export const wysiwyg = wysiwyg_mod.default;
 export const input_list_creator = input_list_creator_mod.default;
 export const create_list = create_list_mod.default;

@@ -113,10 +113,10 @@ export default ({
   return /*html*/ `
     ${css}
 
-    <div class="layout horizontal" style='width: 100%; height: 100%;'>
+    <div class="layout horizontal" style='width: 100%; height: 100%;' id="${id}">
         <div class="layout vertical flex" style='height: 100%'>
         <h3  style='text-align: start; margin: 5px 10px;'>${title ? title : ''}</h3>
-            <div class='layout vertical form_set end-justified' style='height: 100%' id="${id}">
+            <div class='layout vertical form_set end-justified' style='height: 100%'>
                 ${
                   position === 'top'
                     ? `<div id="list_container">${create_list(

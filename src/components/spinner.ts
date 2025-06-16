@@ -1,5 +1,5 @@
-const create_loader = (el, parent, current_el) => {
-  let div_old = document.getElementById(el);
+const create_loader = async (el, parent, current_el, root = document, add_css = false) => {
+  let div_old = root.getElementById(el);
   if (!div_old) {
     // Create a div element
     const div = document.createElement('div');
@@ -22,9 +22,12 @@ const create_loader = (el, parent, current_el) => {
     // Append the div to the parent element
     parent.appendChild(div);
 
+    const css = await import('./css/animations');
+
     // Create a style element for the CSS animation
     const style = document.createElement('style');
     style.textContent = `
+      ${css.default()}
       .spin-circle {
         animation: spin 1s linear infinite;
         transform-origin: 50% 50%;
@@ -43,7 +46,7 @@ const create_loader = (el, parent, current_el) => {
     `;
 
     // Append the style element to the head of the document
-    document.head.appendChild(style);
+    root.head ? root.head.appendChild(style) : root.appendChild(style);
 
     // If the circle doesn't render correctly, force a redraw
     setTimeout(() => {
@@ -56,17 +59,28 @@ const create_loader = (el, parent, current_el) => {
     return div_old;
   }
 };
+
 let last_canvas = null;
-const transition_content = (is_out, where_el = 'l_v_canvas', spinner_el = 'l_v_canvas_loader') => {
+const transition_content = async (
+  is_out,
+  where_el = 'l_v_canvas',
+  spinner_el = 'l_v_canvas_loader',
+  root: any = document,
+  do_add_css = false,
+) => {
   const out_in = is_out ? 'out' : 'in';
   const out_in_reverse = is_out ? 'in' : 'out';
-  let canvas = document.getElementById(where_el);
+  let canvas = root.getElementById(where_el);
   if (!canvas) {
     canvas = last_canvas; //document.querySelector(last_canvas);
   }
   if (canvas) {
+    // if (!last_canvas && do_add_css) {
+    //   await add_css(root);
+    // }
     last_canvas = canvas;
-    const canvas_loader = create_loader(spinner_el, canvas.parentElement, canvas);
+
+    const canvas_loader = await create_loader(spinner_el, canvas.parentElement, canvas, root, do_add_css);
 
     canvas.classList.remove('fade_' + out_in_reverse);
     canvas.classList.add('fade_' + out_in);
