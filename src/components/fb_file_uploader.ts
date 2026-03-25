@@ -7,7 +7,7 @@ export default async (
   elem,
   db_file_path: string,
   file_path: string,
-  callback: (response: { name: string; url: string }) => void,
+  callback: (response: { name: string; url: string; storage_ref: string }) => void,
 ) => {
   /** NOTE: add this back in
    * await import("firebase/storage");
@@ -40,7 +40,7 @@ export default async (
     const full_file_path = `${file_path}/${name_time}.${type}`;
     const fileRef = storageRef.child(full_file_path);
     const snapshot = await fileRef.put(file);
-    return { url: await snapshot.ref.getDownloadURL(), name: name };
+    return { url: await snapshot.ref.getDownloadURL(), name: name, storage_ref: full_file_path };
     // firebase
     //     .storage()
     //     .ref()
@@ -79,6 +79,7 @@ export default async (
           const data = {
             name: value.name,
             url: value.url,
+            storage_ref: value.storage_ref,
           };
           fire_ref
             .child('files')

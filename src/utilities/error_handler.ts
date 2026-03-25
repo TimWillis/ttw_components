@@ -81,6 +81,7 @@ const error_handler = (api_url: string, application: string) => {
   };
 
   const send_error_to_api = async (error_info: ErrorInfo) => {
+    console.log('send_error_to_api', error_info);
     const response = await fetch(api_url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

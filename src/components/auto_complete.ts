@@ -58,8 +58,10 @@ export default ({
       'div',
     );
     const item_el = document.getElementById(id + '_items');
+    if (!item_el) return;
     item_el.addEventListener('click', (e: MouseEvent) => {
       const input_el = document.getElementById(id) as HTMLInputElement | null;
+      if (!input_el) return;
       input_el.value = (e.target as HTMLElement).innerText;
       // input_el.value = (e.target as HTMLElement).dataset.value;
       callback

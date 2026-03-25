@@ -6,12 +6,15 @@ export default () => {
         i(...args);
       }
     },
+    emit_response(event: any, ...args: any) {
+      return (this.events[event] || []).map((cb: any) => cb(...args));
+    },
     on(event: any, cb: any) {
       (this.events[event] = this.events[event] || []).push(cb);
       return () => (this.events[event] = this.events[event].filter((i: any) => i !== cb));
     },
     remove(event: any, cb: any) {
-      if (!this.events[event]) return console.log('event does not exist');
+      if (!this.events[event]) return;
       this.events[event] = this.events[event].filter((i: any) => i.name !== cb.name);
     },
   };

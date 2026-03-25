@@ -57,7 +57,7 @@ export default ({
     //         : "";
   };
   setTimeout(() => {
-    document.getElementById(id).addEventListener('keyup', (e) => {
+    document.getElementById(id)?.addEventListener('keyup', (e) => {
       callback(e, create_data_list);
     });
     create_data_list(list);

@@ -23,7 +23,6 @@ import * as input_list_creator_mod from './components/input_list_creator';
 import * as create_list_mod from './components/create_list';
 
 import * as fb_file_uploader_mod from './components/fb_file_uploader';
-import * as fb_file_uploader_new_mod from './components/fb_file_uploader_new';
 
 // import * as layout_mod from './components/layout/layout';
 import * as dom_diffing_mod from './utilities/dom_diffing';
@@ -83,12 +82,12 @@ export const spinner = spinner_mod.default;
 export const svg = svg_mod.default;
 export const close_svg = close_svg_mod.default;
 export const toast = toast_mod.default;
+export type { ToastOptions } from './components/toast';
 export const wysiwyg = wysiwyg_mod.default;
 export const input_list_creator = input_list_creator_mod.default;
 export const create_list = create_list_mod.default;
 
 export const fb_file_uploader = fb_file_uploader_mod.default;
-export const fb_file_uploader_new = fb_file_uploader_new_mod.default;
 
 // export const layout = layout_mod.default;
 export const anonymous_user = anonymous_user_mod.default;
